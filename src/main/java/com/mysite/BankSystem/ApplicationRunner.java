@@ -9,8 +9,9 @@ public class ApplicationRunner {
         try (ConsoleUI consoleUI = new ConsoleUI()) {
             consoleUI.startMenu();
 
+        } catch (Throwable ex) {
+            System.out.println("system error!!!!");
         }
-
 
 
     }

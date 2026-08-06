@@ -11,7 +11,7 @@ public abstract class Customer {
     private boolean deleted;
 
 
-    private static final AtomicInteger  ID_COUNTER = new AtomicInteger(1);
+    private static final AtomicInteger ID_COUNTER = new AtomicInteger(1);
 
     public Customer(String name, String number, String email, CustomerType type) {
         this.name = name;
@@ -73,6 +73,6 @@ public abstract class Customer {
                 ", name='" + name + '\'' +
                 ", number='" + number + '\'' +
                 ", email='" + email + '\'' +
-                ", type=" + type + '\'' ;
+                ", type=" + type + '\'';
     }
 }

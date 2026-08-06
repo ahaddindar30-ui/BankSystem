@@ -25,6 +25,14 @@ public class LegalCustomer extends Customer {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return obj instanceof LegalCustomer &&
+                ((LegalCustomer) obj).getCompanyRegistration().equals(getCompanyRegistration());
+    }
+
+
+
+    @Override
     public String toString() {
         return super.toString() +
                 ", faxNumber='" + faxNumber + '\'' +

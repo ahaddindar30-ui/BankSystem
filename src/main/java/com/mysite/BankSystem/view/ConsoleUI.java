@@ -2,7 +2,11 @@ package com.mysite.BankSystem.view;
 
 import com.mysite.BankSystem.model.Customer;
 import com.mysite.BankSystem.model.CustomerType;
-import com.mysite.BankSystem.service.CustomerService;
+import com.mysite.BankSystem.service.exception.CustomerNotFindException;
+import com.mysite.BankSystem.service.exception.DuplicateCustomerException;
+import com.mysite.BankSystem.service.exception.EmptyCustomerException;
+import com.mysite.BankSystem.service.exception.InvalidCustomerType;
+import com.mysite.BankSystem.service.impl.CustomerServiceImpl;
 import com.mysite.BankSystem.util.ScannerWrapper;
 import com.mysite.BankSystem.view.component.AbstractCustomerUI;
 
@@ -10,11 +14,11 @@ import java.util.List;
 import java.util.function.Function;
 
 public class ConsoleUI implements AutoCloseable {
-    private final CustomerService customerService;
+    private final CustomerServiceImpl customerServiceImpl;
     private final ScannerWrapper scannerWrapper;
 
     public ConsoleUI() {
-        this.customerService = CustomerService.getInstance();
+        this.customerServiceImpl = CustomerServiceImpl.getInstance();
         this.scannerWrapper = ScannerWrapper.getInstance();
     }
 
@@ -22,34 +26,39 @@ public class ConsoleUI implements AutoCloseable {
         int choice;
         do {
             printMenu();
-            choice = scannerWrapper.getUserInput("Enter Choice: ",Integer::valueOf);
-            switch (choice) {
-                case 0:
-                    System.out.println("Exit");
-                    break;
-                case 1:
-                    addCustomers();
-                    break;
-                case 2:
-                    printAllCustomers();
-                    break;
-                case 3:
-                    searchAndPrintCustomerByName();
-                    break;
-                case 4:
-                    searchAndPrintCustomerByFamily();
-                    break;
-                case 5:
-                    editCustomerById();
-                    break;
-                case 6:
-                    deletedCustomerById();
-                    break;
-                case 7:
-                    printAllDeletedCustomers();
-                    break;
-                default:
-                    System.out.println("Invalid Choice");
+            choice = scannerWrapper.getUserInput("Enter Choice: ", Integer::valueOf);
+            try {
+
+                switch (choice) {
+                    case 0:
+                        System.out.println("Exit");
+                        break;
+                    case 1:
+                        addCustomers();
+                        break;
+                    case 2:
+                        printAllCustomers();
+                        break;
+                    case 3:
+                        searchAndPrintCustomerByName();
+                        break;
+                    case 4:
+                        searchAndPrintCustomerByFamily();
+                        break;
+                    case 5:
+                        editCustomerById();
+                        break;
+                    case 6:
+                        deletedCustomerById();
+                        break;
+                    case 7:
+                        printAllDeletedCustomers();
+                        break;
+                    default:
+                        System.out.println("Invalid Choice");
+                }
+            } catch (CustomerNotFindException | EmptyCustomerException ex) {
+                System.out.println(ex.getMessage());
             }
         } while (choice != 0);
         scannerWrapper.close();
@@ -76,72 +85,63 @@ public class ConsoleUI implements AutoCloseable {
         System.out.println("Customer type:");
         System.out.println("1.REAL");
         System.out.println("2.LEGAL");
-        System.out.println();
-        int choice = scannerWrapper.getUserInput("Enter your choice: ",Integer::valueOf);
-
-        Customer customer = AbstractCustomerUI.fromCustomerUI(
-                        CustomerType.fromValue(choice))
-                .generateCustomerUI();
-        customerService.addCustomers(customer);
+        int choice = scannerWrapper.getUserInput("Enter your choice: ", Integer::valueOf);
+        try {
+            customerServiceImpl.addCustomers(AbstractCustomerUI.fromCustomerUI(
+                            CustomerType.fromValue(choice))
+                    .generateCustomerUI());
+        } catch (DuplicateCustomerException e) {
+            System.out.println("it,s not possible to select duplicate email and national code and company registration.");
+            addCustomers();
+        } catch (InvalidCustomerType ex) {
+            System.out.println("Invalid Customer Type exception.");
+            addCustomers();
+        }
 
 
     }
 
-    public void printAllDeletedCustomers() {
-        List<Customer> allCustomer = customerService.getDeletedCustomers();
-        if (allCustomer.isEmpty()) {
-            System.out.println("There is no  deleted customers.");
-        } else {
-            System.out.println("All deleted Customer: ");
-            for (Customer customer : allCustomer) {
-                System.out.println(customer);
-            }
+    public void printAllDeletedCustomers() throws EmptyCustomerException {
+        List<Customer> allCustomer = customerServiceImpl.getDeletedCustomers();
+        System.out.println("All deleted Customer: ");
+        for (Customer customer : allCustomer) {
+            System.out.println(customer);
         }
     }
 
-    public void printAllCustomers() {
-        List<Customer> allCustomer = customerService.getActiveCustomers();
-        if (allCustomer.isEmpty()) {
-            System.out.println("There is no customer to add.");
-        } else {
-            System.out.println("All Customer: ");
-            for (Customer customer : allCustomer) {
-                System.out.println(customer);
-            }
+    public void printAllCustomers() throws EmptyCustomerException {
+        List<Customer> allCustomer = customerServiceImpl.getActiveCustomers();
+        System.out.println("All Customer: ");
+        for (Customer customer : allCustomer) {
+            System.out.println(customer);
         }
     }
 
     private void searchAndPrintCustomerByName() {
         String name = scannerWrapper.getUserInput("Enter your the name: ", Function.identity());
-        List<Customer> customers = customerService.printCustomersByName(name);
+        List<Customer> customers = customerServiceImpl.printCustomersByName(name);
         customers.forEach(System.out::println);
 
     }
 
     private void searchAndPrintCustomerByFamily() {
         String family = scannerWrapper.getUserInput("Enter your the family: ", Function.identity());
-        List<Customer> customers = customerService.printCustomerByFamily(family);
+        List<Customer> customers = customerServiceImpl.printCustomerByFamily(family);
         customers.forEach(System.out::println);
 
     }
 
-    public void editCustomerById() {
+    public void editCustomerById() throws CustomerNotFindException {
         String id = scannerWrapper.getUserInput("Enter your the id: ", Function.identity());
-        Customer customer = customerService.editeCustomerById(Integer.valueOf(id));
-        String name = scannerWrapper.getUserInput("Enter your new name: ", Function.identity());
-        customer.setName(name);
-        String number = scannerWrapper.getUserInput("Enter your new number: ", Function.identity());
-        customer.setNumber(number);
-        String email = scannerWrapper.getUserInput("Enter your new email: ", Function.identity());
-        customer.setEmail(email);
+        Customer customer = customerServiceImpl.editeCustomerById(Integer.valueOf(id));
         AbstractCustomerUI
                 .fromCustomerUI(customer.getType())
                 .editCustomer(customer);
     }
 
-    private void deletedCustomerById() {
+    private void deletedCustomerById() throws CustomerNotFindException {
         String id = scannerWrapper.getUserInput("Enter your customer id: ", Function.identity());
-        customerService.deleteCustomerById(Integer.valueOf(id));
+        customerServiceImpl.deleteCustomerById(Integer.valueOf(id));
     }
 
 

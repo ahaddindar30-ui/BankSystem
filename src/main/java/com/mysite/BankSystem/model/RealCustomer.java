@@ -1,6 +1,6 @@
 package com.mysite.BankSystem.model;
 
-public class RealCustomer extends Customer{
+public class RealCustomer extends Customer {
     private String family;
     private String nationalCode;
 
@@ -23,6 +23,14 @@ public class RealCustomer extends Customer{
     public void setNationalCode(String nationalCode) {
         this.nationalCode = nationalCode;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof RealCustomer &&
+                ((RealCustomer) obj).getEmail().equals(getEmail())&&
+                ((RealCustomer) obj).getNationalCode().equals(getNationalCode());
+    }
+
 
     @Override
     public String toString() {

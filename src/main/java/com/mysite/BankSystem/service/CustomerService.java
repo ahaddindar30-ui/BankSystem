@@ -1,85 +1,24 @@
 package com.mysite.BankSystem.service;
 
 import com.mysite.BankSystem.model.Customer;
-import com.mysite.BankSystem.model.RealCustomer;
+import com.mysite.BankSystem.service.exception.CustomerNotFindException;
+import com.mysite.BankSystem.service.exception.DuplicateCustomerException;
+import com.mysite.BankSystem.service.exception.EmptyCustomerException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class CustomerService {
-    private  ArrayList<Customer> customers = new ArrayList<>();
+public interface CustomerService {
+    void deleteCustomerById(Integer id) throws CustomerNotFindException;
 
-    private static final CustomerService INSTANCE;
-    public static CustomerService getInstance() {
-        return INSTANCE;
-    }
-    static {
-        INSTANCE = new CustomerService();
-    }
-    private CustomerService() {
+    List<Customer> printCustomerByFamily(String family);
 
-    }
+    List<Customer> printCustomersByName(String name);
 
+    void addCustomers(Customer customer) throws DuplicateCustomerException;
 
+    List<Customer> getActiveCustomers() throws CustomerNotFindException, EmptyCustomerException;
 
+    List<Customer> getDeletedCustomers() throws CustomerNotFindException, EmptyCustomerException;
 
-    public void deleteCustomerById(Integer id) {
-        customers.stream()
-                .filter(customer -> !customer.isDeleted())
-                .filter(customer -> customer.getId().equals(id))
-                .forEach(customer -> customer.setDeleted(true));
-    }
-
-
-
-    public List<Customer> printCustomerByFamily(String  family) {
-       return customers.stream()
-               .filter(customer -> !customer.isDeleted())
-               .filter(customer -> customer instanceof RealCustomer)
-               .map(customer -> (RealCustomer) (customer))
-               .filter(realCustomer -> realCustomer.getFamily().equalsIgnoreCase(family))
-               .collect(Collectors.toList());
-
-
-    }
-
-    public List<Customer> printCustomersByName(String name) {
-        return customers.stream()
-                .filter(customer -> !customer.isDeleted())
-                .filter(customer -> customer.getName().equalsIgnoreCase(name))
-                .collect(Collectors.toList());
-
-
-    }
-
-
-
-    public void addCustomers(Customer customer) {
-        customers.add(customer);
-
-    }
-
-
-
-    public List<Customer> getActiveCustomers() {
-        return customers.stream()
-                 .filter(customer -> !customer.isDeleted())
-                 .collect(Collectors.toList());
-    }
-
-    public List<Customer> getDeletedCustomers() {
-        return customers.stream()
-                 .filter(Customer::isDeleted)
-                .collect(Collectors.toList());
-    }
-
-    public Customer editeCustomerById(Integer id) {
-        return customers.stream()
-                .filter(customer -> !customer.isDeleted())
-                .filter(customer -> customer.getId().equals(id))
-                .findFirst().get();
-    }
-
+    Customer editeCustomerById(Integer id) throws CustomerNotFindException;
 }
-
