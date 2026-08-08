@@ -4,6 +4,7 @@ import com.mysite.BankSystem.model.Customer;
 import com.mysite.BankSystem.service.exception.CustomerNotFindException;
 import com.mysite.BankSystem.service.exception.DuplicateCustomerException;
 import com.mysite.BankSystem.service.exception.EmptyCustomerException;
+import com.mysite.BankSystem.service.exception.ValidationException;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface CustomerService {
 
     List<Customer> printCustomersByName(String name);
 
-    void addCustomers(Customer customer) throws DuplicateCustomerException;
+    void addCustomers(Customer customer) throws DuplicateCustomerException, ValidationException;
 
     List<Customer> getActiveCustomers() throws CustomerNotFindException, EmptyCustomerException;
 

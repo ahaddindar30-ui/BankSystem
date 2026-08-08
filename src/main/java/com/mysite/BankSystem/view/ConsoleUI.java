@@ -2,10 +2,7 @@ package com.mysite.BankSystem.view;
 
 import com.mysite.BankSystem.model.Customer;
 import com.mysite.BankSystem.model.CustomerType;
-import com.mysite.BankSystem.service.exception.CustomerNotFindException;
-import com.mysite.BankSystem.service.exception.DuplicateCustomerException;
-import com.mysite.BankSystem.service.exception.EmptyCustomerException;
-import com.mysite.BankSystem.service.exception.InvalidCustomerType;
+import com.mysite.BankSystem.service.exception.*;
 import com.mysite.BankSystem.service.impl.CustomerServiceImpl;
 import com.mysite.BankSystem.util.ScannerWrapper;
 import com.mysite.BankSystem.view.component.AbstractCustomerUI;
@@ -96,6 +93,8 @@ public class ConsoleUI implements AutoCloseable {
         } catch (InvalidCustomerType ex) {
             System.out.println("Invalid Customer Type exception.");
             addCustomers();
+        } catch (ValidationException e) {
+            System.out.println(e.getMessage());
         }
 
 
@@ -103,7 +102,7 @@ public class ConsoleUI implements AutoCloseable {
 
     public void printAllDeletedCustomers() throws EmptyCustomerException {
         List<Customer> allCustomer = customerServiceImpl.getDeletedCustomers();
-        System.out.println("All deleted Customer: ");
+        System.out.println("All deleted Customers: ");
         for (Customer customer : allCustomer) {
             System.out.println(customer);
         }
@@ -111,7 +110,7 @@ public class ConsoleUI implements AutoCloseable {
 
     public void printAllCustomers() throws EmptyCustomerException {
         List<Customer> allCustomer = customerServiceImpl.getActiveCustomers();
-        System.out.println("All Customer: ");
+        System.out.println("All Customers: ");
         for (Customer customer : allCustomer) {
             System.out.println(customer);
         }
@@ -132,7 +131,7 @@ public class ConsoleUI implements AutoCloseable {
     }
 
     public void editCustomerById() throws CustomerNotFindException {
-        String id = scannerWrapper.getUserInput("Enter your the id: ", Function.identity());
+        String id = scannerWrapper.getUserInput("Enter your customer id: ", Function.identity());
         Customer customer = customerServiceImpl.editeCustomerById(Integer.valueOf(id));
         AbstractCustomerUI
                 .fromCustomerUI(customer.getType())

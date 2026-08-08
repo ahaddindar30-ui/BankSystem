@@ -7,8 +7,9 @@ import com.mysite.BankSystem.service.CustomerService;
 import com.mysite.BankSystem.service.exception.CustomerNotFindException;
 import com.mysite.BankSystem.service.exception.DuplicateCustomerException;
 import com.mysite.BankSystem.service.exception.EmptyCustomerException;
+import com.mysite.BankSystem.service.exception.ValidationException;
+import com.mysite.BankSystem.service.validation.ValidationContext;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,8 @@ import java.util.stream.Collectors;
 
 public class CustomerServiceImpl implements CustomerService {
     private ArrayList<Customer> customers = new ArrayList<>();
+
+    private ValidationContext<Customer> validationContext;
 
     private static final CustomerServiceImpl INSTANCE;
 
@@ -28,6 +31,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private CustomerServiceImpl() {
+        this.validationContext = new CustomerValidationContext();
 
     }
 
@@ -62,7 +66,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 
     @Override
-    public void addCustomers(Customer customer) throws DuplicateCustomerException {
+    public void addCustomers(Customer customer) throws DuplicateCustomerException, ValidationException {
         Optional<Customer> any = customers.stream()
                 .filter(it -> it.getEmail().equals(customer.getEmail()) &&
                         (((customer instanceof RealCustomer) &&
@@ -74,6 +78,8 @@ public class CustomerServiceImpl implements CustomerService {
         if (any.isPresent()) {
             throw new DuplicateCustomerException();
         }
+
+        validationContext.validate(customer);
         customers.add(customer);
 
     }
