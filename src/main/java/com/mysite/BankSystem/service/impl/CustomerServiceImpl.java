@@ -8,7 +8,6 @@ import com.mysite.BankSystem.service.exception.CustomerNotFindException;
 import com.mysite.BankSystem.service.exception.DuplicateCustomerException;
 import com.mysite.BankSystem.service.exception.EmptyCustomerException;
 import com.mysite.BankSystem.service.exception.ValidationException;
-import com.mysite.BankSystem.service.validation.ValidationContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 public class CustomerServiceImpl implements CustomerService {
     private ArrayList<Customer> customers = new ArrayList<>();
 
-    private ValidationContext<Customer> validationContext;
+
 
     private static final CustomerServiceImpl INSTANCE;
 
@@ -31,14 +30,14 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private CustomerServiceImpl() {
-        this.validationContext = new CustomerValidationContext();
+
 
     }
 
 
     @Override
     public void deleteCustomerById(Integer id) throws CustomerNotFindException {
-        editeCustomerById(id).setDeleted(true);
+        getCustomerById(id).setDeleted(true);
     }
 
 
@@ -79,8 +78,13 @@ public class CustomerServiceImpl implements CustomerService {
             throw new DuplicateCustomerException();
         }
 
-        validationContext.validate(customer);
+
         customers.add(customer);
+
+    }
+
+    @Override
+    public void updateCustomer(Customer customer) throws ValidationException {
 
     }
 
@@ -108,7 +112,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer editeCustomerById(Integer id) throws CustomerNotFindException {
+    public Customer getCustomerById(Integer id) throws CustomerNotFindException {
         return customers.stream()
                 .filter(customer -> !customer.isDeleted())
                 .filter(customer -> customer.getId().equals(id))

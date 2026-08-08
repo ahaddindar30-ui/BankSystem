@@ -1,6 +1,7 @@
 package com.mysite.BankSystem.view.component;
 
-import com.mysite.BankSystem.model.Customer;
+import com.mysite.BankSystem.dto.CustomerDto;
+
 import com.mysite.BankSystem.model.CustomerType;
 
 import com.mysite.BankSystem.util.ScannerWrapper;
@@ -15,7 +16,7 @@ public abstract class AbstractCustomerUI {
 
     }
 
-    public Customer generateCustomerUI() {
+    public CustomerDto generateCustomerUI() {
         String name = scannerWrapper.getUserInput("Enter your name: ", Function.identity());
         String number = scannerWrapper.getUserInput("Enter your number: ", Function.identity());
         String email = scannerWrapper.getUserInput("Enter your email: ", Function.identity());
@@ -23,10 +24,10 @@ public abstract class AbstractCustomerUI {
     }
 
 
-    protected abstract Customer additionalGenerateCustomer(String name, String number, String email);
+    protected abstract CustomerDto additionalGenerateCustomer(String name, String number, String email);
 
 
-    public abstract void editCustomer(Customer customer);
+    public abstract void editCustomer(CustomerDto customer);
 
     public static AbstractCustomerUI fromCustomerUI(CustomerType type) {
         return switch (type) {

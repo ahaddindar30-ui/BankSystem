@@ -1,9 +1,9 @@
 package com.mysite.BankSystem.view;
 
-import com.mysite.BankSystem.model.Customer;
+import com.mysite.BankSystem.dto.CustomerDto;
+import com.mysite.BankSystem.facade.impl.CustomerFacadeImpl;
 import com.mysite.BankSystem.model.CustomerType;
 import com.mysite.BankSystem.service.exception.*;
-import com.mysite.BankSystem.service.impl.CustomerServiceImpl;
 import com.mysite.BankSystem.util.ScannerWrapper;
 import com.mysite.BankSystem.view.component.AbstractCustomerUI;
 
@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.function.Function;
 
 public class ConsoleUI implements AutoCloseable {
-    private final CustomerServiceImpl customerServiceImpl;
+    private final CustomerFacadeImpl customerFacade;
     private final ScannerWrapper scannerWrapper;
 
     public ConsoleUI() {
-        this.customerServiceImpl = CustomerServiceImpl.getInstance();
+        this.customerFacade = CustomerFacadeImpl.getInstance();
         this.scannerWrapper = ScannerWrapper.getInstance();
     }
 
@@ -84,7 +84,7 @@ public class ConsoleUI implements AutoCloseable {
         System.out.println("2.LEGAL");
         int choice = scannerWrapper.getUserInput("Enter your choice: ", Integer::valueOf);
         try {
-            customerServiceImpl.addCustomers(AbstractCustomerUI.fromCustomerUI(
+            customerFacade.addCustomers(AbstractCustomerUI.fromCustomerUI(
                             CustomerType.fromValue(choice))
                     .generateCustomerUI());
         } catch (DuplicateCustomerException e) {
@@ -95,52 +95,59 @@ public class ConsoleUI implements AutoCloseable {
             addCustomers();
         } catch (ValidationException e) {
             System.out.println(e.getMessage());
+            addCustomers();
         }
 
 
     }
 
-    public void printAllDeletedCustomers() throws EmptyCustomerException {
-        List<Customer> allCustomer = customerServiceImpl.getDeletedCustomers();
+    public void printAllDeletedCustomers() throws EmptyCustomerException, CustomerNotFindException {
+        List<CustomerDto> allCustomer = customerFacade.getDeletedCustomers();
         System.out.println("All deleted Customers: ");
-        for (Customer customer : allCustomer) {
+        for (CustomerDto customer : allCustomer) {
             System.out.println(customer);
         }
     }
 
-    public void printAllCustomers() throws EmptyCustomerException {
-        List<Customer> allCustomer = customerServiceImpl.getActiveCustomers();
+    public void printAllCustomers() throws EmptyCustomerException, CustomerNotFindException {
+        List<CustomerDto> allCustomer = customerFacade.getActiveCustomers();
         System.out.println("All Customers: ");
-        for (Customer customer : allCustomer) {
+        for (CustomerDto customer : allCustomer) {
             System.out.println(customer);
         }
     }
 
     private void searchAndPrintCustomerByName() {
         String name = scannerWrapper.getUserInput("Enter your the name: ", Function.identity());
-        List<Customer> customers = customerServiceImpl.printCustomersByName(name);
+        List<CustomerDto> customers = customerFacade.printCustomersByName(name);
         customers.forEach(System.out::println);
 
     }
 
     private void searchAndPrintCustomerByFamily() {
         String family = scannerWrapper.getUserInput("Enter your the family: ", Function.identity());
-        List<Customer> customers = customerServiceImpl.printCustomerByFamily(family);
+        List<CustomerDto> customers = customerFacade.printCustomerByFamily(family);
         customers.forEach(System.out::println);
 
     }
 
     public void editCustomerById() throws CustomerNotFindException {
         String id = scannerWrapper.getUserInput("Enter your customer id: ", Function.identity());
-        Customer customer = customerServiceImpl.editeCustomerById(Integer.valueOf(id));
+        CustomerDto customerDto = customerFacade.getCustomerById(Integer.valueOf(id));
         AbstractCustomerUI
-                .fromCustomerUI(customer.getType())
-                .editCustomer(customer);
+                .fromCustomerUI(customerDto.getType())
+                .editCustomer(customerDto);
+        try {
+            customerFacade.updateCustomer(customerDto);
+        } catch (ValidationException e) {
+            System.out.println(e.getMessage());
+            editCustomerById();
+        }
     }
 
     private void deletedCustomerById() throws CustomerNotFindException {
         String id = scannerWrapper.getUserInput("Enter your customer id: ", Function.identity());
-        customerServiceImpl.deleteCustomerById(Integer.valueOf(id));
+        customerFacade.deleteCustomerById(Integer.valueOf(id));
     }
 
 
