@@ -1,0 +1,70 @@
+package com.mysite.BankSystem.service.impl;
+
+import com.mysite.BankSystem.model.Customer;
+import com.mysite.BankSystem.model.LegalCustomer;
+import com.mysite.BankSystem.model.RealCustomer;
+import com.mysite.BankSystem.service.exception.ValidationException;
+import com.mysite.BankSystem.service.validation.ValidationContext;
+import com.mysite.BankSystem.util.RegexValidator;
+
+public class CustomerValidationContext extends ValidationContext<Customer> {
+
+    public  CustomerValidationContext(){
+        addValidation(customer -> {
+            String name = customer.getName();
+            if (name == null || name.trim().isEmpty()) {
+                throw new ValidationException("Customer name is empty or null");
+            }
+        });
+
+        addValidation(customer -> {
+            String number = customer.getNumber();
+            if (!RegexValidator.regexNumber(number) || number.trim().isEmpty()) {
+                throw new ValidationException("Invalid format number ");
+            }
+        });
+
+        addValidation(customer -> {
+            String email = customer.getEmail();
+            if (!RegexValidator.regexEmail(email) || email.trim().isEmpty()) {
+                throw new ValidationException("Invalid format email ");
+            }
+        });
+
+        addValidation(customer -> {
+            if (customer instanceof RealCustomer){
+                String family = ((RealCustomer)customer).getFamily();
+                if (family == null || family.trim().isEmpty()) {
+                    throw new ValidationException("Customer family is empty or null");
+                }
+            }
+        });
+        addValidation(customer -> {
+            if (customer instanceof RealCustomer){
+                String nationalCode = ((RealCustomer) customer).getNationalCode();
+                if (!RegexValidator.regexNationalCode(nationalCode) || nationalCode.trim().isEmpty()) {
+                    throw new ValidationException("Invalid format national code ");
+                }
+            }
+        });
+
+        addValidation(customer -> {
+            if (customer instanceof LegalCustomer){
+                String fax = ((LegalCustomer) customer).getFaxNumber();
+                if (!RegexValidator.regexNumber(fax)|| fax.trim().trim().isEmpty()) {
+                    throw new ValidationException("Invalid format fax number ");
+                }
+            }
+        });
+        addValidation(customer -> {
+            if (customer instanceof LegalCustomer){
+                String registration = ((LegalCustomer) customer).getCompanyRegistration();
+                if (!RegexValidator.regexCompanyRegistration(registration)) {
+                    throw new ValidationException("Invalid format company registration  ");
+                }
+            }
+        });
+    }
+
+
+}
