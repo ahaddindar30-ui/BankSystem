@@ -1,5 +1,8 @@
 package com.mysite.BankSystem.service.impl;
 
+import com.mysite.BankSystem.dto.CustomerDto;
+import com.mysite.BankSystem.dto.LegalCustomerDto;
+import com.mysite.BankSystem.dto.RealCustomerDto;
 import com.mysite.BankSystem.model.Customer;
 import com.mysite.BankSystem.model.LegalCustomer;
 import com.mysite.BankSystem.model.RealCustomer;
@@ -7,7 +10,7 @@ import com.mysite.BankSystem.service.exception.ValidationException;
 import com.mysite.BankSystem.service.validation.ValidationContext;
 import com.mysite.BankSystem.util.RegexValidator;
 
-public class CustomerValidationContext extends ValidationContext<Customer> {
+public class CustomerValidationContext extends ValidationContext<CustomerDto> {
 
     public  CustomerValidationContext(){
         addValidation(customer -> {
@@ -32,16 +35,16 @@ public class CustomerValidationContext extends ValidationContext<Customer> {
         });
 
         addValidation(customer -> {
-            if (customer instanceof RealCustomer){
-                String family = ((RealCustomer)customer).getFamily();
+            if (customer instanceof RealCustomerDto){
+                String family = ((RealCustomerDto)customer).getFamily();
                 if (family == null || family.trim().isEmpty()) {
                     throw new ValidationException("Customer family is empty or null");
                 }
             }
         });
         addValidation(customer -> {
-            if (customer instanceof RealCustomer){
-                String nationalCode = ((RealCustomer) customer).getNationalCode();
+            if (customer instanceof RealCustomerDto){
+                String nationalCode = ((RealCustomerDto) customer).getNationalCode();
                 if (!RegexValidator.regexNationalCode(nationalCode) || nationalCode.trim().isEmpty()) {
                     throw new ValidationException("Invalid format national code ");
                 }
@@ -49,16 +52,16 @@ public class CustomerValidationContext extends ValidationContext<Customer> {
         });
 
         addValidation(customer -> {
-            if (customer instanceof LegalCustomer){
-                String fax = ((LegalCustomer) customer).getFaxNumber();
+            if (customer instanceof LegalCustomerDto){
+                String fax = ((LegalCustomerDto) customer).getFaxNumber();
                 if (!RegexValidator.regexNumber(fax)|| fax.trim().trim().isEmpty()) {
                     throw new ValidationException("Invalid format fax number ");
                 }
             }
         });
         addValidation(customer -> {
-            if (customer instanceof LegalCustomer){
-                String registration = ((LegalCustomer) customer).getCompanyRegistration();
+            if (customer instanceof LegalCustomerDto){
+                String registration = ((LegalCustomerDto) customer).getCompanyRegistration();
                 if (!RegexValidator.regexCompanyRegistration(registration)) {
                     throw new ValidationException("Invalid format company registration  ");
                 }
