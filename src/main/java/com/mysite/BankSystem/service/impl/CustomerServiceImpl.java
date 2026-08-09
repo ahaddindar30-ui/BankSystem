@@ -8,6 +8,7 @@ import com.mysite.BankSystem.model.LegalCustomer;
 import com.mysite.BankSystem.model.RealCustomer;
 import com.mysite.BankSystem.service.CustomerService;
 import com.mysite.BankSystem.service.exception.*;
+import com.mysite.BankSystem.util.MapperWrapper;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 public class CustomerServiceImpl implements CustomerService {
     private ArrayList<Customer> customers = new ArrayList<>();
+    private ObjectMapper objectMapper = MapperWrapper.getInstance();
 
 
     private static final CustomerServiceImpl INSTANCE;
@@ -131,7 +133,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     private void saveJson(String name) throws FileException {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
             File file = new File(name + ".json");
             if (!file.exists()) {
                 file.createNewFile();
@@ -167,6 +168,35 @@ public class CustomerServiceImpl implements CustomerService {
 
     }
 
+    @Override
+    public void initData() {
+        try {
+            loadJson("initData");
+        } catch (FileException ignored) {
+
+        }
+    }
+
+    @Override
+    public void saveOnExit() {
+        try {
+            saveJson("initData");
+        } catch (FileException ignored) {
+
+        }
+    }
+
+    @Override
+    public void addData(String name) throws FileException {
+        try {
+            ArrayList<Customer> newCustomers  = objectMapper.readValue(new File(name + ".json"),
+                    new TypeReference<ArrayList<Customer>>() {});
+            customers.addAll(newCustomers);
+        } catch (IOException e) {
+            throw new FileException();
+        }
+    }
+
     private void loadSerialize(String name) throws FileException {
         try (FileInputStream fileInputStream = new FileInputStream(name + ".crm");
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
@@ -179,8 +209,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     private void loadJson(String name) throws FileException {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-
             customers = objectMapper.readValue(new File(name + ".json"),
                     new TypeReference<ArrayList<Customer>>() {
                     });

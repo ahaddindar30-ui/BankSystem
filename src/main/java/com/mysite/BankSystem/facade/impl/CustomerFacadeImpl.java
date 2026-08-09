@@ -97,4 +97,19 @@ public class CustomerFacadeImpl implements CustomerFacade {
     public void loadData(String name, FileType fileType) throws FileException {
         customerService.loadData(name ,fileType);
     }
+
+    @Override
+    public void initData() {
+        customerService.initData();
+    }
+
+    @Override
+    public void saveOnExit() {
+        customerService.saveOnExit();
+    }
+
+    @Override
+    public void addData(String name) throws FileException {
+        customerService.addData(name);
+    }
 }

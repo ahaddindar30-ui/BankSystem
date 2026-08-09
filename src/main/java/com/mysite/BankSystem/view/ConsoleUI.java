@@ -20,7 +20,15 @@ public class ConsoleUI implements AutoCloseable {
         this.scannerWrapper = ScannerWrapper.getInstance();
     }
 
+    private void saveOnExit(){
+        customerFacade.saveOnExit();
+    }
+
     public void startMenu() {
+
+        customerFacade.initData();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(this::saveOnExit));
         int choice;
         do {
             printMenu();
@@ -58,6 +66,9 @@ public class ConsoleUI implements AutoCloseable {
                     case 9:
                         loadData();
                         break;
+                    case 10:
+                        addData();
+                        break;
                     default:
                         System.out.println("Invalid Choice");
                 }
@@ -70,10 +81,17 @@ public class ConsoleUI implements AutoCloseable {
 
     }
 
+    private void addData() throws FileException {
+        String name = scannerWrapper.getUserInput("Enter your json file name: ", Function.identity());
+        customerFacade.addData(name);
+
+    }
+
     private void loadData() throws FileException {
         System.out.println("File type:");
         System.out.println("1.Serialaze");
         System.out.println("2.Jaon");
+        System.out.println();
         int choice = scannerWrapper.getUserInput("Enter your choice: ", Integer::valueOf);
 
         try {
@@ -90,10 +108,11 @@ public class ConsoleUI implements AutoCloseable {
         System.out.println("File type:");
         System.out.println("1.Serialaze");
         System.out.println("2.Jaon");
+        System.out.println();
         int choice = scannerWrapper.getUserInput("Enter your choice: ", Integer::valueOf);
         try {
             FileType fileType = FileType.fromValue(choice);
-            String name = scannerWrapper.getUserInput("Enter your the name: ", Function.identity());
+            String name = scannerWrapper.getUserInput("Enter your file name: ", Function.identity());
             customerFacade.saveData(name,fileType);
         } catch (InvalidType ex) {
             System.out.println("Invalid Type exception.");
@@ -113,6 +132,7 @@ public class ConsoleUI implements AutoCloseable {
         System.out.println("7.Print all deleted customers");
         System.out.println("8.Save data");
         System.out.println("9.Load data");
+        System.out.println("10.Add data");
         System.out.println();
     }
 
@@ -121,6 +141,7 @@ public class ConsoleUI implements AutoCloseable {
         System.out.println("Customer type:");
         System.out.println("1.REAL");
         System.out.println("2.LEGAL");
+        System.out.println();
         int choice = scannerWrapper.getUserInput("Enter your choice: ", Integer::valueOf);
         try {
             customerFacade.addCustomers(AbstractCustomerUI.fromCustomerUI(

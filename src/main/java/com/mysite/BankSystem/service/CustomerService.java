@@ -25,4 +25,10 @@ public interface CustomerService {
     void saveData(String name, FileType fileType) throws FileException;
 
     void loadData(String name, FileType fileType) throws FileException;
+
+    void initData();
+
+    void saveOnExit();
+
+    void addData(String name) throws FileException;
 }
