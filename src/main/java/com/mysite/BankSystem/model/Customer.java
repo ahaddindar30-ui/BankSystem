@@ -1,6 +1,7 @@
 package com.mysite.BankSystem.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -17,6 +18,7 @@ public abstract class Customer implements Serializable {
     private String number;
     private String email;
     private final CustomerType type;
+    @JsonIgnore
     private final Integer id;
     private boolean deleted;
 
