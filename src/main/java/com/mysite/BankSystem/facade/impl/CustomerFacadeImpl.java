@@ -4,11 +4,9 @@ import com.mysite.BankSystem.dto.CustomerDto;
 import com.mysite.BankSystem.facade.CustomerFacade;
 import com.mysite.BankSystem.mapper.CustomerMapper;
 import com.mysite.BankSystem.model.Customer;
+import com.mysite.BankSystem.model.FileType;
 import com.mysite.BankSystem.service.CustomerService;
-import com.mysite.BankSystem.service.exception.CustomerNotFindException;
-import com.mysite.BankSystem.service.exception.DuplicateCustomerException;
-import com.mysite.BankSystem.service.exception.EmptyCustomerException;
-import com.mysite.BankSystem.service.exception.ValidationException;
+import com.mysite.BankSystem.service.exception.*;
 import com.mysite.BankSystem.service.impl.CustomerServiceImpl;
 import com.mysite.BankSystem.service.impl.CustomerValidationContext;
 import com.mysite.BankSystem.service.validation.ValidationContext;
@@ -89,5 +87,14 @@ public class CustomerFacadeImpl implements CustomerFacade {
     public CustomerDto getCustomerById(Integer id) throws CustomerNotFindException {
         return CustomerMapper.mapToCustomerDto(
                 customerService.getCustomerById(id));
+    }
+
+    public void saveData(String name, FileType fileType) throws FileException {
+        customerService.saveData(name ,fileType);
+    }
+
+    @Override
+    public void loadData(String name, FileType fileType) throws FileException {
+        customerService.loadData(name ,fileType);
     }
 }

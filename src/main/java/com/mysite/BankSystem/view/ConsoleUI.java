@@ -3,6 +3,7 @@ package com.mysite.BankSystem.view;
 import com.mysite.BankSystem.dto.CustomerDto;
 import com.mysite.BankSystem.facade.impl.CustomerFacadeImpl;
 import com.mysite.BankSystem.model.CustomerType;
+import com.mysite.BankSystem.model.FileType;
 import com.mysite.BankSystem.service.exception.*;
 import com.mysite.BankSystem.util.ScannerWrapper;
 import com.mysite.BankSystem.view.component.AbstractCustomerUI;
@@ -51,10 +52,16 @@ public class ConsoleUI implements AutoCloseable {
                     case 7:
                         printAllDeletedCustomers();
                         break;
+                    case 8:
+                        saveData();
+                        break;
+                    case 9:
+                        loadData();
+                        break;
                     default:
                         System.out.println("Invalid Choice");
                 }
-            } catch (CustomerNotFindException | EmptyCustomerException ex) {
+            } catch (CustomerNotFindException | FileException | EmptyCustomerException ex) {
                 System.out.println(ex.getMessage());
             }
         } while (choice != 0);
@@ -63,6 +70,36 @@ public class ConsoleUI implements AutoCloseable {
 
     }
 
+    private void loadData() throws FileException {
+        System.out.println("File type:");
+        System.out.println("1.Serialaze");
+        System.out.println("2.Jaon");
+        int choice = scannerWrapper.getUserInput("Enter your choice: ", Integer::valueOf);
+
+        try {
+            FileType fileType = FileType.fromValue(choice);
+            String name = scannerWrapper.getUserInput("Enter your file name: ", Function.identity());
+            customerFacade.loadData(name,fileType);
+        } catch (InvalidType ex) {
+            System.out.println("Invalid Type exception.");
+            loadData();
+        }
+    }
+
+    private void saveData() throws FileException {
+        System.out.println("File type:");
+        System.out.println("1.Serialaze");
+        System.out.println("2.Jaon");
+        int choice = scannerWrapper.getUserInput("Enter your choice: ", Integer::valueOf);
+        try {
+            FileType fileType = FileType.fromValue(choice);
+            String name = scannerWrapper.getUserInput("Enter your the name: ", Function.identity());
+            customerFacade.saveData(name,fileType);
+        } catch (InvalidType ex) {
+            System.out.println("Invalid Type exception.");
+            saveData();
+        }
+    }
 
     public void printMenu() {
         System.out.println("Menu:");
@@ -73,7 +110,9 @@ public class ConsoleUI implements AutoCloseable {
         System.out.println("4.Search and Customers By family");
         System.out.println("5.Edit Customers By id");
         System.out.println("6.Delete Customers By id");
-        System.out.println("7.print all deleted customers");
+        System.out.println("7.Print all deleted customers");
+        System.out.println("8.Save data");
+        System.out.println("9.Load data");
         System.out.println();
     }
 
@@ -90,7 +129,7 @@ public class ConsoleUI implements AutoCloseable {
         } catch (DuplicateCustomerException e) {
             System.out.println("it,s not possible to select duplicate email and national code and company registration.");
             addCustomers();
-        } catch (InvalidCustomerType ex) {
+        } catch (InvalidType ex) {
             System.out.println("Invalid Customer Type exception.");
             addCustomers();
         } catch (ValidationException e) {

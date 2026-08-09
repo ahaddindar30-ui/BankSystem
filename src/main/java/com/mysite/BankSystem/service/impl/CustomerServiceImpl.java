@@ -1,14 +1,15 @@
 package com.mysite.BankSystem.service.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysite.BankSystem.model.Customer;
+import com.mysite.BankSystem.model.FileType;
 import com.mysite.BankSystem.model.LegalCustomer;
 import com.mysite.BankSystem.model.RealCustomer;
 import com.mysite.BankSystem.service.CustomerService;
-import com.mysite.BankSystem.service.exception.CustomerNotFindException;
-import com.mysite.BankSystem.service.exception.DuplicateCustomerException;
-import com.mysite.BankSystem.service.exception.EmptyCustomerException;
-import com.mysite.BankSystem.service.exception.ValidationException;
+import com.mysite.BankSystem.service.exception.*;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +17,6 @@ import java.util.stream.Collectors;
 
 public class CustomerServiceImpl implements CustomerService {
     private ArrayList<Customer> customers = new ArrayList<>();
-
 
 
     private static final CustomerServiceImpl INSTANCE;
@@ -117,6 +117,76 @@ public class CustomerServiceImpl implements CustomerService {
                 .filter(customer -> !customer.isDeleted())
                 .filter(customer -> customer.getId().equals(id))
                 .findFirst().orElseThrow(CustomerNotFindException::new);
+    }
+
+    @Override
+    public void saveData(String name, FileType fileType) throws FileException {
+        switch (fileType) {
+            case FileType.JSON -> saveJson(name);
+            case FileType.SERIALIZE -> saveSerialize(name);
+        }
+
+
+    }
+
+    private void saveJson(String name) throws FileException {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            File file = new File(name + ".json");
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            objectMapper.writeValue(file, customers);
+        } catch (IOException e) {
+            throw new FileException();
+        }
+
+    }
+
+    private void saveSerialize(String name) throws FileException {
+        try {
+            File file = new File(name + ".crm");
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            try (FileOutputStream fileOutputStream = new FileOutputStream(file);
+                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
+                objectOutputStream.writeObject(customers);
+            }
+        } catch (IOException e) {
+            throw new FileException();
+        }
+    }
+
+    @Override
+    public void loadData(String name, FileType fileType) throws FileException {
+        switch (fileType) {
+            case FileType.JSON -> loadJson(name);
+            case FileType.SERIALIZE -> loadSerialize(name);
+        }
+
+    }
+
+    private void loadSerialize(String name) throws FileException {
+        try (FileInputStream fileInputStream = new FileInputStream(name + ".crm");
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+            customers = (ArrayList<Customer>) objectInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new FileException();
+        }
+    }
+
+
+    private void loadJson(String name) throws FileException {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            customers = objectMapper.readValue(new File(name + ".json"),
+                    new TypeReference<ArrayList<Customer>>() {
+                    });
+        } catch (IOException e) {
+            throw new FileException();
+        }
     }
 
 }

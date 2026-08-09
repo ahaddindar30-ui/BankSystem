@@ -1,8 +1,18 @@
 package com.mysite.BankSystem.model;
 
-import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class Customer {
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+import java.io.Serializable;
+import java.util.concurrent.atomic.AtomicInteger;
+@JsonTypeInfo(use= JsonTypeInfo.Id.NAME,property = "type")
+@JsonSubTypes({
+            @JsonSubTypes.Type(value = LegalCustomer.class , name = "LEGAL"),
+            @JsonSubTypes.Type(value = RealCustomer.class , name = "REAL")
+
+})
+public abstract class Customer implements Serializable {
     private String name;
     private String number;
     private String email;
@@ -12,6 +22,11 @@ public abstract class Customer {
 
 
     private static final AtomicInteger ID_COUNTER = new AtomicInteger(1);
+
+    public Customer(CustomerType type) {
+        this.id = ID_COUNTER.getAndIncrement();
+        this.type = type;
+    }
 
     public Customer(String name, String number, String email, CustomerType type) {
         this.name = name;

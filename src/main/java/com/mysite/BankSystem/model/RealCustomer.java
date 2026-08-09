@@ -1,11 +1,16 @@
 package com.mysite.BankSystem.model;
 
-public class RealCustomer extends Customer {
+import java.io.Serializable;
+
+public class RealCustomer extends Customer implements Serializable {
     private String family;
     private String nationalCode;
 
     public RealCustomer(String name, String number, String email) {
         super(name, number, email, CustomerType.REAL);
+    }
+    public RealCustomer() {
+        super( CustomerType.REAL);
     }
 
     public String getFamily() {

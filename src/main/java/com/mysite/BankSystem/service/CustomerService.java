@@ -1,10 +1,8 @@
 package com.mysite.BankSystem.service;
 
 import com.mysite.BankSystem.model.Customer;
-import com.mysite.BankSystem.service.exception.CustomerNotFindException;
-import com.mysite.BankSystem.service.exception.DuplicateCustomerException;
-import com.mysite.BankSystem.service.exception.EmptyCustomerException;
-import com.mysite.BankSystem.service.exception.ValidationException;
+import com.mysite.BankSystem.model.FileType;
+import com.mysite.BankSystem.service.exception.*;
 
 import java.util.List;
 
@@ -23,4 +21,8 @@ public interface CustomerService {
     List<Customer> getDeletedCustomers() throws CustomerNotFindException, EmptyCustomerException;
 
     Customer getCustomerById(Integer id) throws CustomerNotFindException;
+
+    void saveData(String name, FileType fileType) throws FileException;
+
+    void loadData(String name, FileType fileType) throws FileException;
 }

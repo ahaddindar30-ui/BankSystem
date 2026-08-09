@@ -1,10 +1,8 @@
 package com.mysite.BankSystem.facade;
 
 import com.mysite.BankSystem.dto.CustomerDto;
-import com.mysite.BankSystem.service.exception.CustomerNotFindException;
-import com.mysite.BankSystem.service.exception.DuplicateCustomerException;
-import com.mysite.BankSystem.service.exception.EmptyCustomerException;
-import com.mysite.BankSystem.service.exception.ValidationException;
+import com.mysite.BankSystem.model.FileType;
+import com.mysite.BankSystem.service.exception.*;
 
 import java.util.List;
 
@@ -24,4 +22,7 @@ public interface CustomerFacade {
     List<CustomerDto> getDeletedCustomers() throws CustomerNotFindException, EmptyCustomerException;
 
     CustomerDto getCustomerById(Integer id) throws CustomerNotFindException;
+    void saveData(String name, FileType fileType) throws FileException;
+
+    void loadData(String name, FileType fileType) throws FileException;
 }

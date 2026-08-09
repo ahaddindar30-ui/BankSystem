@@ -1,11 +1,17 @@
 package com.mysite.BankSystem.model;
 
-public class LegalCustomer extends Customer {
+import java.io.Serializable;
+
+public class LegalCustomer extends Customer implements Serializable {
     private String faxNumber;
     private String companyRegistration;
 
     public LegalCustomer(String name, String number, String email) {
         super(name, number, email, CustomerType.LEGAL);
+    }
+
+    public LegalCustomer() {
+        super(CustomerType.LEGAL);
     }
 
     public String getFaxNumber() {
