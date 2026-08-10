@@ -17,8 +17,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CustomerServiceImpl implements CustomerService {
-    private ArrayList<Customer> customers = new ArrayList<>();
-    private ObjectMapper objectMapper = MapperWrapper.getInstance();
+    private ArrayList<Customer> customers;
+    private final ObjectMapper objectMapper;
 
 
     private static final CustomerServiceImpl INSTANCE;
@@ -32,6 +32,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private CustomerServiceImpl() {
+        this.customers = new ArrayList<>();
+        this.objectMapper = MapperWrapper.getInstance();
 
 
     }

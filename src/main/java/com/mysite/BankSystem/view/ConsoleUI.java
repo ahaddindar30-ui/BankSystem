@@ -1,5 +1,7 @@
 package com.mysite.BankSystem.view;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysite.BankSystem.dto.CustomerDto;
 import com.mysite.BankSystem.facade.impl.CustomerFacadeImpl;
 import com.mysite.BankSystem.model.CustomerType;
@@ -15,9 +17,12 @@ public class ConsoleUI implements AutoCloseable {
     private final CustomerFacadeImpl customerFacade;
     private final ScannerWrapper scannerWrapper;
 
+    private final ObjectMapper objectMapper;
+
     public ConsoleUI() {
         this.customerFacade = CustomerFacadeImpl.getInstance();
         this.scannerWrapper = ScannerWrapper.getInstance();
+        this.objectMapper = new ObjectMapper();
     }
 
     private void saveOnExit(){
@@ -169,11 +174,15 @@ public class ConsoleUI implements AutoCloseable {
         }
     }
 
-    public void printAllCustomers() throws EmptyCustomerException, CustomerNotFindException {
+    public void printAllCustomers() throws EmptyCustomerException,CustomerNotFindException  {
         List<CustomerDto> allCustomer = customerFacade.getActiveCustomers();
         System.out.println("All Customers: ");
         for (CustomerDto customer : allCustomer) {
-            System.out.println(customer);
+            try {
+                System.out.println(objectMapper.writeValueAsString(customer));
+            } catch (JsonProcessingException e) {
+                System.out.println("Error on print customer id "+customer.getId());
+            }
         }
     }
 

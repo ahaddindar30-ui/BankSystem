@@ -1,7 +1,13 @@
 package com.mysite.BankSystem.model;
 
-import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+import java.io.Serializable;
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class RealCustomer extends Customer implements Serializable {
     private String family;
     private String nationalCode;
@@ -13,21 +19,7 @@ public class RealCustomer extends Customer implements Serializable {
         super( CustomerType.REAL);
     }
 
-    public String getFamily() {
-        return family;
-    }
 
-    public void setFamily(String family) {
-        this.family = family;
-    }
-
-    public String getNationalCode() {
-        return nationalCode;
-    }
-
-    public void setNationalCode(String nationalCode) {
-        this.nationalCode = nationalCode;
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -37,11 +29,5 @@ public class RealCustomer extends Customer implements Serializable {
     }
 
 
-    @Override
-    public String toString() {
-        return super.toString() +
-                ", family='" + family + '\'' +
-                ", nationalCode='" + nationalCode + '\'' +
-                '}';
-    }
+
 }

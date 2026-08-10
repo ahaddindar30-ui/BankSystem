@@ -2,7 +2,7 @@ package com.mysite.BankSystem.facade.impl;
 
 import com.mysite.BankSystem.dto.CustomerDto;
 import com.mysite.BankSystem.facade.CustomerFacade;
-import com.mysite.BankSystem.mapper.CustomerMapper;
+import com.mysite.BankSystem.mapper.CustomerMapStruct;
 import com.mysite.BankSystem.model.Customer;
 import com.mysite.BankSystem.model.FileType;
 import com.mysite.BankSystem.service.CustomerService;
@@ -10,6 +10,7 @@ import com.mysite.BankSystem.service.exception.*;
 import com.mysite.BankSystem.service.impl.CustomerServiceImpl;
 import com.mysite.BankSystem.service.impl.CustomerValidationContext;
 import com.mysite.BankSystem.service.validation.ValidationContext;
+import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
     private ValidationContext<CustomerDto> validationContext;
 
     private final CustomerService customerService;
+    private final CustomerMapStruct customerMapStruct;
 
 
     private static final CustomerFacadeImpl INSTANCE;
@@ -32,6 +34,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
     }
 
     private CustomerFacadeImpl() {
+        this.customerMapStruct = Mappers.getMapper(CustomerMapStruct.class);
         this.customerService = CustomerServiceImpl.getInstance();
         this.validationContext = new CustomerValidationContext();
     }
@@ -46,20 +49,20 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
     @Override
     public List<CustomerDto> printCustomerByFamily(String family) {
-        return CustomerMapper.mapCustomerDtoList(
+        return customerMapStruct.mapCustomerDtoList(
                 customerService.printCustomerByFamily(family));
     }
 
     @Override
     public List<CustomerDto> printCustomersByName(String name) {
-        return CustomerMapper.mapCustomerDtoList(
+        return customerMapStruct.mapCustomerDtoList(
                 customerService.printCustomersByName(name));
     }
 
     @Override
     public void addCustomers(CustomerDto customerDto) throws DuplicateCustomerException, ValidationException {
     validationContext.validate(customerDto);
-    customerService.addCustomers(CustomerMapper.mapToCustomer(customerDto));
+    customerService.addCustomers(customerMapStruct.mapToCustomer(customerDto));
 
     }
 
@@ -67,25 +70,25 @@ public class CustomerFacadeImpl implements CustomerFacade {
     public void updateCustomer(CustomerDto customerDto) throws ValidationException, CustomerNotFindException {
         validationContext.validate(customerDto);
         Customer customer = customerService.getCustomerById(customerDto.getId());
-        customerService.updateCustomer(CustomerMapper.mapToCustomer(customerDto, customer));
+        customerService.updateCustomer(customerMapStruct.mapToCustomer(customerDto, customer));
 
     }
 
     @Override
     public List<CustomerDto> getActiveCustomers() throws CustomerNotFindException, EmptyCustomerException {
-        return CustomerMapper.mapCustomerDtoList(
+        return customerMapStruct.mapCustomerDtoList(
                 customerService.getActiveCustomers());
     }
 
     @Override
     public List<CustomerDto> getDeletedCustomers() throws CustomerNotFindException, EmptyCustomerException {
-        return CustomerMapper.mapCustomerDtoList(
+        return customerMapStruct.mapCustomerDtoList(
                 customerService.getDeletedCustomers());
     }
 
     @Override
     public CustomerDto getCustomerById(Integer id) throws CustomerNotFindException {
-        return CustomerMapper.mapToCustomerDto(
+        return customerMapStruct.mapToCustomerDto(
                 customerService.getCustomerById(id));
     }
 

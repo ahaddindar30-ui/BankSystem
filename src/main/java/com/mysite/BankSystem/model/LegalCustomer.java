@@ -1,7 +1,13 @@
 package com.mysite.BankSystem.model;
 
-import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+import java.io.Serializable;
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class LegalCustomer extends Customer implements Serializable {
     private String faxNumber;
     private String companyRegistration;
@@ -14,22 +20,6 @@ public class LegalCustomer extends Customer implements Serializable {
         super(CustomerType.LEGAL);
     }
 
-    public String getFaxNumber() {
-        return faxNumber;
-    }
-
-    public void setFaxNumber(String faxNumber) {
-        this.faxNumber = faxNumber;
-    }
-
-    public String getCompanyRegistration() {
-        return companyRegistration;
-    }
-
-    public void setCompanyRegistration(String companyRegistration) {
-        this.companyRegistration = companyRegistration;
-    }
-
     @Override
     public boolean equals(Object obj) {
         return obj instanceof LegalCustomer &&
@@ -38,11 +28,4 @@ public class LegalCustomer extends Customer implements Serializable {
 
 
 
-    @Override
-    public String toString() {
-        return super.toString() +
-                ", faxNumber='" + faxNumber + '\'' +
-                ", registration='" + companyRegistration + '\'' +
-                '}';
-    }
 }
