@@ -71,7 +71,8 @@ public class CustomerServiceImpl implements CustomerService {
         List<Customer>collect = customers.stream()
                 .filter(it-> it.equals(customer))
                 .findAny()
-                .stream().toList();
+                .stream()
+                .toList();
 
         if (!collect.isEmpty()) {
             throw new DuplicateCustomerException();
