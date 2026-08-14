@@ -6,7 +6,6 @@ import com.mysite.banking.mapper.CustomerMapStruct;
 import com.mysite.banking.model.Customer;
 import com.mysite.banking.model.FileType;
 import com.mysite.banking.service.CustomerService;
-import com.mysite.BankSystem.service.exception.*;
 import com.mysite.banking.service.exception.*;
 import com.mysite.banking.service.impl.CustomerServiceImpl;
 import com.mysite.banking.service.impl.CustomerValidationContext;

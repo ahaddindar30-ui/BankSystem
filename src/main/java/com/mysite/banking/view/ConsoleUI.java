@@ -6,7 +6,6 @@ import com.mysite.banking.dto.CustomerDto;
 import com.mysite.banking.facade.impl.CustomerFacadeImpl;
 import com.mysite.banking.model.CustomerType;
 import com.mysite.banking.model.FileType;
-import com.mysite.BankSystem.service.exception.*;
 import com.mysite.banking.service.exception.*;
 import com.mysite.banking.util.ScannerWrapper;
 import com.mysite.banking.view.component.AbstractCustomerUI;

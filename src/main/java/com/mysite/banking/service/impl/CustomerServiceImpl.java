@@ -7,7 +7,6 @@ import com.mysite.banking.model.FileType;
 import com.mysite.banking.model.LegalCustomer;
 import com.mysite.banking.model.RealCustomer;
 import com.mysite.banking.service.CustomerService;
-import com.mysite.BankSystem.service.exception.*;
 import com.mysite.banking.service.exception.*;
 import com.mysite.banking.util.MapperWrapper;
 
