@@ -49,11 +49,11 @@ public interface CustomerMapStruct {
                     new RealCustomer(null,null,null));
         }
     }
-    @Mapping(ignore = true , target = "id")
+    @Mapping(target = "id" , ignore = true)
     RealCustomer mapToRealCustomer(RealCustomerDto realCustomerDto,
                                                 @MappingTarget RealCustomer realCustomer);
 
-    @Mapping(ignore = true , target = "id")
+    @Mapping(target = "id" , ignore = true)
     LegalCustomer mapToLegalCustomer(LegalCustomerDto legalCustomerDto,
                                                   @MappingTarget LegalCustomer legalCustomer );
 }

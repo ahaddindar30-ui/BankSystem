@@ -25,7 +25,8 @@ public class RealCustomer extends Customer implements Serializable {
     public boolean equals(Object obj) {
         return obj instanceof RealCustomer &&
                 ((RealCustomer) obj).getEmail().equals(getEmail())&&
-                ((RealCustomer) obj).getNationalCode().equals(getNationalCode());
+                ((RealCustomer) obj).getNationalCode()
+                        .equals(getNationalCode());
     }
 
 

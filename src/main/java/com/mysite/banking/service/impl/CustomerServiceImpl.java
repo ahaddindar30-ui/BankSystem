@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysite.banking.model.Customer;
 import com.mysite.banking.model.FileType;
-import com.mysite.banking.model.LegalCustomer;
 import com.mysite.banking.model.RealCustomer;
 import com.mysite.banking.service.CustomerService;
 import com.mysite.banking.service.exception.*;
@@ -13,7 +12,6 @@ import com.mysite.banking.util.MapperWrapper;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CustomerServiceImpl implements CustomerService {
@@ -69,20 +67,15 @@ public class CustomerServiceImpl implements CustomerService {
 
 
     @Override
-    public void addCustomers(Customer customer) throws DuplicateCustomerException, ValidationException {
-        Optional<Customer> any = customers.stream()
-                .filter(it -> it.getEmail().equals(customer.getEmail()) &&
-                        (((customer instanceof RealCustomer) &&
-                                (it instanceof RealCustomer) &&
-                                ((RealCustomer) it).getNationalCode().equals(((RealCustomer)
-                                        customer).getNationalCode())) ||
-                                ((customer instanceof LegalCustomer && it instanceof LegalCustomer) && ((LegalCustomer) it).getCompanyRegistration()
-                                        .equals(((LegalCustomer) customer).getCompanyRegistration())))).findAny();
-        if (any.isPresent()) {
+    public void addCustomers(Customer customer) throws DuplicateCustomerException {
+        List<Customer>collect = customers.stream()
+                .filter(it-> it.equals(customer))
+                .findAny()
+                .stream().toList();
+
+        if (!collect.isEmpty()) {
             throw new DuplicateCustomerException();
         }
-
-
         customers.add(customer);
 
     }

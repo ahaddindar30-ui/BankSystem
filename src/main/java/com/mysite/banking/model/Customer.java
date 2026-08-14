@@ -34,6 +34,7 @@ public abstract class Customer implements Serializable {
     public Customer(CustomerType type) {
         this.id = ID_COUNTER.getAndIncrement();
         this.type = type;
+        this.deleted = false;
     }
 
     public Customer(String name, String number, String email, CustomerType type) {

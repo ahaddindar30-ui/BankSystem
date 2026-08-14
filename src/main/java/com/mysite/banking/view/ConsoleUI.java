@@ -170,7 +170,11 @@ public class ConsoleUI implements AutoCloseable {
         List<CustomerDto> allCustomer = customerFacade.getDeletedCustomers();
         System.out.println("All deleted Customers: ");
         for (CustomerDto customer : allCustomer) {
-            System.out.println(customer);
+            try {
+                System.out.println(objectMapper.writeValueAsString(customer));
+            } catch (JsonProcessingException e) {
+                System.out.println("Error on print customer ");
+            }
         }
     }
 
@@ -182,6 +186,7 @@ public class ConsoleUI implements AutoCloseable {
                 System.out.println(objectMapper.writeValueAsString(customer));
             } catch (JsonProcessingException e) {
                 System.out.println("Error on print customer id "+customer.getId());
+
             }
         }
     }
