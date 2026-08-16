@@ -14,7 +14,6 @@ public interface CustomerService {
     List<Customer> printCustomersByName(String name);
 
     void addCustomers(Customer customer) throws DuplicateCustomerException;
-    void updateCustomer(Customer customer) throws ValidationException;
 
     List<Customer> getActiveCustomers() throws CustomerNotFindException, EmptyCustomerException;
 

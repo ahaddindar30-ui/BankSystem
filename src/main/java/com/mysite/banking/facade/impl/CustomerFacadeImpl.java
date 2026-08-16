@@ -8,7 +8,6 @@ import com.mysite.banking.model.FileType;
 import com.mysite.banking.service.CustomerService;
 import com.mysite.banking.service.exception.*;
 import com.mysite.banking.service.impl.CustomerServiceImpl;
-import com.mysite.banking.service.impl.CustomerValidationContext;
 import com.mysite.banking.service.validation.ValidationContext;
 import org.mapstruct.factory.Mappers;
 
@@ -70,7 +69,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
     public void updateCustomer(CustomerDto customerDto) throws ValidationException, CustomerNotFindException {
         validationContext.validate(customerDto);
         Customer customer = customerService.getCustomerById(customerDto.getId());
-        customerService.updateCustomer(customerMapStruct.mapToCustomer(customerDto, customer));
+        customerMapStruct.mapToCustomer(customerDto, customer);
 
     }
 

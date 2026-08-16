@@ -1,4 +1,4 @@
-package com.mysite.banking.service.impl;
+package com.mysite.banking.facade.impl;
 
 import com.mysite.banking.dto.CustomerDto;
 import com.mysite.banking.dto.LegalCustomerDto;

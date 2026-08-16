@@ -81,10 +81,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     }
 
-    @Override
-    public void updateCustomer(Customer customer) throws ValidationException {
 
-    }
 
 
     @Override
@@ -167,7 +164,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void initData() {
         try {
-            loadJson("initData");
+            loadJson("init Customer Data");
         } catch (FileException ignored) {
 
         }
@@ -176,7 +173,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void saveOnExit() {
         try {
-            saveJson("initData");
+            saveJson("init Customer Data");
         } catch (FileException ignored) {
 
         }
