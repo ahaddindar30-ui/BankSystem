@@ -1,0 +1,32 @@
+package com.mysite.banking.facade;
+
+import com.mysite.banking.dto.AccountDto;
+import com.mysite.banking.model.FileType;
+import com.mysite.banking.service.exception.*;
+
+import java.util.List;
+
+public interface AccountFacade {
+
+    void deleteAccountById(Integer id) throws AccountNotFindException;
+
+
+    void addAccounts(AccountDto accountDto) throws  ValidationException;
+    void updateAccount(AccountDto accountDto) throws ValidationException, AccountNotFindException;
+
+    List<AccountDto> getActiveAccounts() throws EmptyAccountException;
+
+    List<AccountDto> getDeletedAccounts() throws EmptyAccountException;
+
+    AccountDto getAccountById(Integer id) throws AccountNotFindException;
+
+    void saveData(String name, FileType fileType) throws FileException;
+
+    void loadData(String name, FileType fileType) throws FileException;
+
+    void initData();
+
+    void saveOnExit();
+
+    void addData(String name) throws FileException;
+}
