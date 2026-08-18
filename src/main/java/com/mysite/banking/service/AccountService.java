@@ -32,4 +32,6 @@ public interface AccountService {
     void deposit(int accountId, Double amount)throws AccountNotFindException;
 
     void withdraw(int accountId, Double amount)throws AccountNotFindException, ValidationException;
+
+    void transfer(int fromAccountId, int toAccountId, Double amount)throws AccountNotFindException, ValidationException ;
 }

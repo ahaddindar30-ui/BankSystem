@@ -45,8 +45,6 @@ public class AccountFacadeImpl implements AccountFacade {
     }
 
 
-
-
     @Override
     public void deleteAccountById(Integer id) throws AccountNotFindException {
         accountService.deleteAccountById(id);
@@ -55,8 +53,8 @@ public class AccountFacadeImpl implements AccountFacade {
 
     @Override
     public void addAccounts(AccountDto accountDto) throws ValidationException {
-    validationContext.validate(accountDto);
-    accountService.addAccounts(accountMapStruct.mapToAccount(accountDto));
+        validationContext.validate(accountDto);
+        accountService.addAccounts(accountMapStruct.mapToAccount(accountDto));
 
     }
 
@@ -86,12 +84,12 @@ public class AccountFacadeImpl implements AccountFacade {
     }
 
     public void saveData(String name, FileType fileType) throws FileException {
-        accountService.saveData(name ,fileType);
+        accountService.saveData(name, fileType);
     }
 
     @Override
     public void loadData(String name, FileType fileType) throws FileException {
-        accountService.loadData(name ,fileType);
+        accountService.loadData(name, fileType);
     }
 
     @Override
@@ -112,20 +110,25 @@ public class AccountFacadeImpl implements AccountFacade {
     @Override
     public List<AccountDto> printAccountByCustomerName(String name) {
         List<Customer> customers = customerService.printCustomersByName(name);
-        List<Account>accountList = new ArrayList<>();
+        List<Account> accountList = new ArrayList<>();
         for (Customer customer : customers) {
-           accountList.addAll(accountService.getAccountByCustomerId(customer.getId()));
+            accountList.addAll(accountService.getAccountByCustomerId(customer.getId()));
         }
         return accountMapStruct.mapAccountDtoList(accountList);
     }
 
     @Override
     public void deposit(int accountId, Double amount) throws AccountNotFindException {
-        accountService.deposit(accountId , amount);
+        accountService.deposit(accountId, amount);
     }
 
     @Override
     public void withdraw(int accountId, Double amount) throws AccountNotFindException, ValidationException {
-        accountService.withdraw(accountId , amount);
+        accountService.withdraw(accountId, amount);
+    }
+
+    @Override
+    public void transfer(int fromAccountId, int toAccountId, Double amount) throws AccountNotFindException, ValidationException {
+        accountService.transfer(fromAccountId, toAccountId, amount);
     }
 }

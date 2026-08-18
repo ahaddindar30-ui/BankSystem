@@ -178,6 +178,17 @@ public class AccountServiceImpl implements AccountService {
         accountById.setBalance(accountById.getBalance() - amount);
     }
 
+    @Override
+    public void transfer(int fromAccountId, int toAccountId, Double amount) throws AccountNotFindException, ValidationException {
+        Account fromAccount = getAccountById(fromAccountId);
+        Account toAccount = getAccountById(toAccountId);
+        if (amount > fromAccount.getBalance()) {
+            throw new ValidationException("The amount is larger than from account balance!");
+        }
+        fromAccount.setBalance(fromAccount.getBalance() - amount);
+        toAccount.setBalance(toAccount.getBalance() + amount);
+    }
+
     private void loadSerialize(String name) throws FileException {
         try (FileInputStream fileInputStream = new FileInputStream(name + ".crm");
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
