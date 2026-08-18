@@ -10,20 +10,21 @@ import com.mysite.banking.util.RegexValidator;
 public class CustomerValidationContext extends ValidationContext<CustomerDto> {
 
     public  CustomerValidationContext(){
+        //  name validation
         addValidation(customer -> {
             String name = customer.getName();
             if (name == null || name.trim().isEmpty()) {
                 throw new ValidationException("Customer name is empty or null");
             }
         });
-
+        //  number validation
         addValidation(customer -> {
             String number = customer.getNumber();
             if (!RegexValidator.regexNumber(number) || number.trim().isEmpty()) {
                 throw new ValidationException("Invalid format number ");
             }
         });
-
+        //  email validation
         addValidation(customer -> {
             String email = customer.getEmail();
             if (!RegexValidator.regexEmail(email) || email.trim().isEmpty()) {
@@ -31,6 +32,7 @@ public class CustomerValidationContext extends ValidationContext<CustomerDto> {
             }
         });
 
+        //  family validation
         addValidation(customer -> {
             if (customer instanceof RealCustomerDto){
                 String family = ((RealCustomerDto)customer).getFamily();
@@ -39,6 +41,8 @@ public class CustomerValidationContext extends ValidationContext<CustomerDto> {
                 }
             }
         });
+
+        //  nationalCode validation
         addValidation(customer -> {
             if (customer instanceof RealCustomerDto){
                 String nationalCode = ((RealCustomerDto) customer).getNationalCode();
@@ -48,6 +52,7 @@ public class CustomerValidationContext extends ValidationContext<CustomerDto> {
             }
         });
 
+        //  fax validation
         addValidation(customer -> {
             if (customer instanceof LegalCustomerDto){
                 String fax = ((LegalCustomerDto) customer).getFaxNumber();
@@ -56,6 +61,8 @@ public class CustomerValidationContext extends ValidationContext<CustomerDto> {
                 }
             }
         });
+
+        //  companyRegistration validation
         addValidation(customer -> {
             if (customer instanceof LegalCustomerDto){
                 String registration = ((LegalCustomerDto) customer).getCompanyRegistration();

@@ -36,17 +36,15 @@ public class AccountServiceImpl implements AccountService {
     }
 
 
-
     @Override
     public void deleteAccountById(Integer id) throws AccountNotFindException {
         getAccountById(id).setDeleted(true);
     }
 
     @Override
-    public void addAccounts(Account account){
+    public void addAccounts(Account account) {
         accounts.add(account);
     }
-
 
 
     @Override
@@ -147,12 +145,37 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void addData(String name) throws FileException {
         try {
-            ArrayList<Account> newAccounts  = objectMapper.readValue(new File(name + ".json"),
-                    new TypeReference<ArrayList<Account>>() {});
+            ArrayList<Account> newAccounts = objectMapper.readValue(new File(name + ".json"),
+                    new TypeReference<ArrayList<Account>>() {
+                    });
             accounts.addAll(newAccounts);
         } catch (IOException e) {
             throw new FileException();
         }
+    }
+
+    @Override
+    public List<Account> getAccountByCustomerId(Integer id) {
+        return accounts.stream()
+                .filter(account -> !account.isDeleted())
+                .filter(account -> account.getCustomerId().equals(id))
+                .collect(Collectors.toList());
+
+    }
+
+    @Override
+    public void deposit(int accountId, Double amount) throws AccountNotFindException {
+        Account accountById = getAccountById(accountId);
+        accountById.setBalance(accountById.getBalance() + amount);
+    }
+
+    @Override
+    public void withdraw(int accountId, Double amount) throws AccountNotFindException, ValidationException {
+        Account accountById = getAccountById(accountId);
+        if (amount > accountById.getBalance()) {
+            throw new ValidationException("The amount is larger than balance!");
+        }
+        accountById.setBalance(accountById.getBalance() - amount);
     }
 
     private void loadSerialize(String name) throws FileException {

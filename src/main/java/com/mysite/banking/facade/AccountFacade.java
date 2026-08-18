@@ -29,4 +29,10 @@ public interface AccountFacade {
     void saveOnExit();
 
     void addData(String name) throws FileException;
+
+    List<AccountDto> printAccountByCustomerName(String name);
+
+    void deposit(int accountId, Double amount)throws AccountNotFindException;
+
+    void withdraw(int accountId, Double amount)throws AccountNotFindException,ValidationException ;
 }

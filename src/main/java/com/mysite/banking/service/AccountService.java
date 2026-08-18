@@ -26,4 +26,10 @@ public interface AccountService {
     void saveOnExit();
 
     void addData(String name) throws FileException;
+
+    List<Account> getAccountByCustomerId(Integer id);
+
+    void deposit(int accountId, Double amount)throws AccountNotFindException;
+
+    void withdraw(int accountId, Double amount)throws AccountNotFindException, ValidationException;
 }

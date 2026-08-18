@@ -4,13 +4,17 @@ import com.mysite.banking.dto.AccountDto;
 import com.mysite.banking.facade.AccountFacade;
 import com.mysite.banking.mapper.AccountMapStruct;
 import com.mysite.banking.model.Account;
+import com.mysite.banking.model.Customer;
 import com.mysite.banking.model.FileType;
 import com.mysite.banking.service.AccountService;
+import com.mysite.banking.service.CustomerService;
 import com.mysite.banking.service.exception.*;
 import com.mysite.banking.service.impl.AccountServiceImpl;
+import com.mysite.banking.service.impl.CustomerServiceImpl;
 import com.mysite.banking.service.validation.ValidationContext;
 import org.mapstruct.factory.Mappers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AccountFacadeImpl implements AccountFacade {
@@ -19,6 +23,7 @@ public class AccountFacadeImpl implements AccountFacade {
     private ValidationContext<AccountDto> validationContext;
 
     private final AccountService accountService;
+    private final CustomerService customerService;
     private final AccountMapStruct accountMapStruct;
 
 
@@ -35,6 +40,7 @@ public class AccountFacadeImpl implements AccountFacade {
     private AccountFacadeImpl() {
         this.accountMapStruct = Mappers.getMapper(AccountMapStruct.class);
         this.accountService = AccountServiceImpl.getInstance();
+        this.customerService = CustomerServiceImpl.getInstance();
         this.validationContext = new AccountValidationContext();
     }
 
@@ -101,5 +107,25 @@ public class AccountFacadeImpl implements AccountFacade {
     @Override
     public void addData(String name) throws FileException {
         accountService.addData(name);
+    }
+
+    @Override
+    public List<AccountDto> printAccountByCustomerName(String name) {
+        List<Customer> customers = customerService.printCustomersByName(name);
+        List<Account>accountList = new ArrayList<>();
+        for (Customer customer : customers) {
+           accountList.addAll(accountService.getAccountByCustomerId(customer.getId()));
+        }
+        return accountMapStruct.mapAccountDtoList(accountList);
+    }
+
+    @Override
+    public void deposit(int accountId, Double amount) throws AccountNotFindException {
+        accountService.deposit(accountId , amount);
+    }
+
+    @Override
+    public void withdraw(int accountId, Double amount) throws AccountNotFindException, ValidationException {
+        accountService.withdraw(accountId , amount);
     }
 }

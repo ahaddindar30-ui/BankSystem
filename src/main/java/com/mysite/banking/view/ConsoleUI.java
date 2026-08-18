@@ -32,10 +32,11 @@ public class ConsoleUI implements AutoCloseable {
         this.objectMapper = new ObjectMapper();
     }
 
-    private void saveOnExit(){
+    private void saveOnExit() {
         customerFacade.saveOnExit();
         accountFacade.saveOnExit();
     }
+
     public void startMenu() {
         customerFacade.initData();
         accountFacade.initData();
@@ -44,24 +45,33 @@ public class ConsoleUI implements AutoCloseable {
         do {
             printMainMenu();
             choice = scannerWrapper.getUserInput("Enter Choice: ", Integer::valueOf);
-                switch (choice) {
-                    case 0:
-                        System.out.print("Exit");
-                        break;
-                    case 1:
-                        CustomerMenu();
-                        break;
-                    case 2:
-                        AccountMenu();
-                        break;
-                    default:
-                        System.out.println("Invalid Choice");
-                }
+            switch (choice) {
+                case 0:
+                    System.out.print("Exit");
+                    break;
+                case 1:
+                    CustomerMenu();
+                    break;
+                case 2:
+                    AccountMenu();
+                    break;
+                default:
+                    System.out.println("Invalid Choice");
+            }
         } while (choice != 0);
         scannerWrapper.close();
 
 
     }
+
+    public void printMainMenu() {
+        System.out.println("Menu:");
+        System.out.println("0.Exit");
+        System.out.println("1.Customer Management");
+        System.out.println("2.Account Management");
+        System.out.println();
+    }
+
     public void CustomerMenu() {
         int choice;
         do {
@@ -110,10 +120,12 @@ public class ConsoleUI implements AutoCloseable {
         } while (choice != 0);
 
     }
+
     private void deletedCustomerById() throws CustomerNotFindException {
         String id = scannerWrapper.getUserInput("Enter customer id: ", Function.identity());
         customerFacade.deleteCustomerById(Integer.valueOf(id));
     }
+
     public void editCustomerById() throws CustomerNotFindException {
         String id = scannerWrapper.getUserInput("Enter the customer id: ", Function.identity());
         CustomerDto customerDto = customerFacade.getCustomerById(Integer.valueOf(id));
@@ -127,8 +139,9 @@ public class ConsoleUI implements AutoCloseable {
             editCustomerById();
         }
     }
+
     private void searchAndPrintCustomerByName() {
-        String name = scannerWrapper.getUserInput("Enter customer name: ", Function.identity());
+        String name = scannerWrapper.getUserInput("Enter the name: ", Function.identity());
         List<CustomerDto> customers = customerFacade.printCustomersByName(name);
         customers.forEach(customer -> {
             try {
@@ -141,7 +154,7 @@ public class ConsoleUI implements AutoCloseable {
     }
 
     private void searchAndPrintCustomerByFamily() {
-        String family = scannerWrapper.getUserInput("Enter customer family: ", Function.identity());
+        String family = scannerWrapper.getUserInput("Enter the family: ", Function.identity());
         List<CustomerDto> customers = customerFacade.printCustomerByFamily(family);
         customers.forEach(customer -> {
             try {
@@ -152,18 +165,20 @@ public class ConsoleUI implements AutoCloseable {
         });
 
     }
-    public void printAllCustomers() throws EmptyCustomerException,CustomerNotFindException  {
+
+    public void printAllCustomers() throws EmptyCustomerException, CustomerNotFindException {
         List<CustomerDto> allCustomer = customerFacade.getActiveCustomers();
         System.out.println("All Customers: ");
         for (CustomerDto customer : allCustomer) {
             try {
                 System.out.println(objectMapper.writeValueAsString(customer));
             } catch (JsonProcessingException e) {
-                System.out.println("Error on print customer id "+customer.getId());
+                System.out.println("Error on print customer id " + customer.getId());
 
             }
         }
     }
+
     public void printAllDeletedCustomers() throws EmptyCustomerException, CustomerNotFindException {
         List<CustomerDto> allCustomer = customerFacade.getDeletedCustomers();
         System.out.println("All deleted Customers: ");
@@ -175,6 +190,7 @@ public class ConsoleUI implements AutoCloseable {
             }
         }
     }
+
     public void addCustomers() {
         System.out.println("Customer type:");
         System.out.println("1.REAL");
@@ -198,6 +214,7 @@ public class ConsoleUI implements AutoCloseable {
 
 
     }
+
     public void printCustomerMenu() {
         System.out.println("Menu:");
         System.out.println("0.Back");
@@ -213,6 +230,7 @@ public class ConsoleUI implements AutoCloseable {
         System.out.println("10.Add data");
         System.out.println();
     }
+
     private void saveData() throws FileException {
         System.out.println("File type:");
         System.out.println("1.Serialaze");
@@ -222,12 +240,13 @@ public class ConsoleUI implements AutoCloseable {
         try {
             FileType fileType = FileType.fromValue(choice);
             String name = scannerWrapper.getUserInput("Enter your file name: ", Function.identity());
-            customerFacade.saveData(name,fileType);
+            customerFacade.saveData(name, fileType);
         } catch (InvalidType ex) {
             System.out.println("Invalid Type exception.");
             saveData();
         }
     }
+
     private void loadData() throws FileException {
         System.out.println("File type:");
         System.out.println("1.Serialaze");
@@ -238,12 +257,13 @@ public class ConsoleUI implements AutoCloseable {
         try {
             FileType fileType = FileType.fromValue(choice);
             String name = scannerWrapper.getUserInput("Enter your file name: ", Function.identity());
-            customerFacade.loadData(name,fileType);
+            customerFacade.loadData(name, fileType);
         } catch (InvalidType ex) {
             System.out.println("Invalid Type exception.");
             loadData();
         }
     }
+
     private void addData() throws FileException {
         String name = scannerWrapper.getUserInput("Enter your json file name: ", Function.identity());
         customerFacade.addData(name);
@@ -266,36 +286,77 @@ public class ConsoleUI implements AutoCloseable {
                         printAllAccounts();
                         break;
                     case 3:
-                        editAccountById();
+                        searchAndPrintAccountByCustomerName();
                         break;
                     case 4:
-                        deletedAccountById();
+                        editAccountById();
                         break;
                     case 5:
-                        printAllDeletedAccounts();
+                        deletedAccountById();
                         break;
                     case 6:
-                        saveAccountData();
+                        printAllDeletedAccounts();
                         break;
                     case 7:
-                        loadAccountData();
+                        deposit();
                         break;
                     case 8:
+                        withdraw();
+                        break;
+                    case 9:
+                        saveAccountData();
+                        break;
+                    case 10:
+                        loadAccountData();
+                        break;
+                    case 11:
                         addAccountData();
                         break;
                     default:
                         System.out.println("Invalid Choice");
                 }
-            } catch (AccountNotFindException | FileException | EmptyAccountException ex) {
+            } catch (AccountNotFindException | FileException | EmptyAccountException | ValidationException ex) {
                 System.out.println(ex.getMessage());
             }
         } while (choice != 0);
     }
+
+    private void withdraw() throws AccountNotFindException, ValidationException {
+        int accountId = scannerWrapper.getUserInput("Enter the account id ", Integer::valueOf);
+        Double amount = scannerWrapper.getUserInput("Enter the amount ", Double::valueOf);
+        accountFacade.withdraw(accountId, amount);
+
+    }
+
+    public void printAccountMenu() {
+        System.out.println("Menu:");
+        System.out.println("0.Back");
+        System.out.println("1.Add account");
+        System.out.println("2.Print all accounts");
+        System.out.println("3.search and print customer by name");
+        System.out.println("4.Edit account by id");
+        System.out.println("5.Delete accounts by id");
+        System.out.println("6.Print all deleted accounts");
+        System.out.println("7.Deposit");
+        System.out.println("8.Withdraw");
+        System.out.println("9.Save data");
+        System.out.println("10.Load data");
+        System.out.println("11.Add data");
+        System.out.println();
+    }
+
+    private void deposit() throws AccountNotFindException {
+        int accountId = scannerWrapper.getUserInput("Enter the account id ", Integer::valueOf);
+        Double amount = scannerWrapper.getUserInput("Enter the amount ", Double::valueOf);
+        accountFacade.deposit(accountId, amount);
+    }
+
     private void addAccountData() throws FileException {
         String name = scannerWrapper.getUserInput("Enter your json file name: ", Function.identity());
         accountFacade.addData(name);
 
     }
+
     private void loadAccountData() throws FileException {
         System.out.println("File type:");
         System.out.println("1.Serialaze");
@@ -305,12 +366,13 @@ public class ConsoleUI implements AutoCloseable {
         try {
             FileType fileType = FileType.fromValue(choice);
             String name = scannerWrapper.getUserInput("Enter your file name: ", Function.identity());
-            accountFacade.loadData(name,fileType);
+            accountFacade.loadData(name, fileType);
         } catch (InvalidType ex) {
             System.out.println("Invalid Type exception.");
             loadAccountData();
         }
     }
+
     private void saveAccountData() throws FileException {
         System.out.println("File type:");
         System.out.println("1.Serialaze");
@@ -320,32 +382,27 @@ public class ConsoleUI implements AutoCloseable {
         try {
             FileType fileType = FileType.fromValue(choice);
             String name = scannerWrapper.getUserInput("Enter your file name: ", Function.identity());
-            accountFacade.saveData(name,fileType);
+            accountFacade.saveData(name, fileType);
         } catch (InvalidType ex) {
             System.out.println("Invalid Type exception.");
             saveAccountData();
         }
     }
-    public void printMainMenu() {
-        System.out.println("Menu:");
-        System.out.println("0.Exit");
-        System.out.println("1.Customer Management");
-        System.out.println("2.Account Management");
-        System.out.println();
+
+
+    private void searchAndPrintAccountByCustomerName() {
+        String name = scannerWrapper.getUserInput("Enter the name: ", Function.identity());
+        List<AccountDto> accountDtoList = accountFacade.printAccountByCustomerName(name);
+        accountDtoList.forEach(accountDto -> {
+            try {
+                System.out.println(objectMapper.writeValueAsString(accountDto));
+            } catch (JsonProcessingException e) {
+                System.out.println("Error on print account id " + accountDto.getId());
+            }
+        });
+
     }
-    public void printAccountMenu() {
-        System.out.println("Menu:");
-        System.out.println("0.Back");
-        System.out.println("1.Add Account");
-        System.out.println("2.Print All Accounts");
-        System.out.println("3.Edit Account By id");
-        System.out.println("4.Delete Accounts By id");
-        System.out.println("5.Print all deleted Accounts");
-        System.out.println("6.Save data");
-        System.out.println("7.Load data");
-        System.out.println("8.Add data");
-        System.out.println();
-    }
+
     public void addAccounts() {
         System.out.println("Account type:");
         System.out.println("1.EURO");
@@ -355,7 +412,7 @@ public class ConsoleUI implements AutoCloseable {
         try {
             AccountType type = AccountType.fromValue(choice);
             int number = scannerWrapper.getUserInput("Enter Customer id : ", Integer::valueOf);
-            AccountDto accountDto = new AccountDto(null , type , 0.0 , number);
+            AccountDto accountDto = new AccountDto(null, type, 0.0, number);
             accountFacade.addAccounts(accountDto);
         } catch (InvalidType ex) {
             System.out.println("Invalid Account Type exception.");
@@ -367,6 +424,7 @@ public class ConsoleUI implements AutoCloseable {
 
 
     }
+
     public void printAllDeletedAccounts() throws EmptyAccountException, AccountNotFindException {
         List<AccountDto> allAccount = accountFacade.getDeletedAccounts();
         System.out.println("All deleted Accounts: ");
@@ -378,18 +436,20 @@ public class ConsoleUI implements AutoCloseable {
             }
         }
     }
-    public void printAllAccounts() throws EmptyAccountException,AccountNotFindException  {
+
+    public void printAllAccounts() throws EmptyAccountException, AccountNotFindException {
         List<AccountDto> allAccount = accountFacade.getActiveAccounts();
         System.out.println("All Customers: ");
         for (AccountDto account : allAccount) {
             try {
                 System.out.println(objectMapper.writeValueAsString(account));
             } catch (JsonProcessingException e) {
-                System.out.println("Error on print account id "+account.getId());
+                System.out.println("Error on print account id " + account.getId());
 
             }
         }
     }
+
     public void editAccountById() throws AccountNotFindException {
         String id = scannerWrapper.getUserInput("Enter the account id: ", Function.identity());
         AccountDto accountDto = accountFacade.getAccountById(Integer.valueOf(id));
@@ -402,10 +462,12 @@ public class ConsoleUI implements AutoCloseable {
             editAccountById();
         }
     }
+
     private void deletedAccountById() throws AccountNotFindException {
         String id = scannerWrapper.getUserInput("Enter account id: ", Function.identity());
         accountFacade.deleteAccountById(Integer.valueOf(id));
     }
+
     @Override
     public void close() {
         scannerWrapper.close();
