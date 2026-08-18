@@ -1,14 +1,6 @@
 package com.mysite.banking.view;
 
 
-import com.mysite.banking.service.exception.*;
-
-import com.mysite.banking.view.component.AccountConsole;
-import com.mysite.banking.view.component.BaseConsole;
-import com.mysite.banking.view.component.CustomerConsole;
-
-
-
 public class ConsoleUI extends BaseConsole implements AutoCloseable {
   private final CustomerConsole customerConsole;
   private final AccountConsole accountConsole;

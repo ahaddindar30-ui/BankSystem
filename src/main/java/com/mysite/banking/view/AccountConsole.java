@@ -1,4 +1,4 @@
-package com.mysite.banking.view.component;
+package com.mysite.banking.view;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mysite.banking.dto.AccountDto;

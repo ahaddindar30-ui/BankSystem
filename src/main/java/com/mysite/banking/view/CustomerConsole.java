@@ -1,4 +1,4 @@
-package com.mysite.banking.view.component;
+package com.mysite.banking.view;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mysite.banking.dto.CustomerDto;
@@ -7,6 +7,7 @@ import com.mysite.banking.facade.impl.CustomerFacadeImpl;
 import com.mysite.banking.model.CustomerType;
 import com.mysite.banking.model.FileType;
 import com.mysite.banking.service.exception.*;
+import com.mysite.banking.view.component.AbstractCustomerUI;
 
 import java.util.List;
 import java.util.function.Function;
