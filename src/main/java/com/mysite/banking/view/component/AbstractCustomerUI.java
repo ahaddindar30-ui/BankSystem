@@ -20,11 +20,12 @@ public abstract class AbstractCustomerUI {
         String name = scannerWrapper.getUserInput("Enter your name: ", Function.identity());
         String number = scannerWrapper.getUserInput("Enter your number: ", Function.identity());
         String email = scannerWrapper.getUserInput("Enter your email: ", Function.identity());
-        return additionalGenerateCustomer(name, number, email);
+        String password = scannerWrapper.getUserInput("Enter your password: ", Function.identity());
+        return additionalGenerateCustomer(name, number, email,password);
     }
 
 
-    protected abstract CustomerDto additionalGenerateCustomer(String name, String number, String email);
+    protected abstract CustomerDto additionalGenerateCustomer(String name, String number, String email, String password);
 
 
     public abstract void editCustomer(CustomerDto customer);

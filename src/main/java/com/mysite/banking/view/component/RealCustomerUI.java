@@ -4,6 +4,9 @@ import com.mysite.banking.dto.CustomerDto;
 import com.mysite.banking.dto.RealCustomerDto;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.function.Function;
 
 public class RealCustomerUI extends AbstractCustomerUI {
@@ -12,12 +15,22 @@ public class RealCustomerUI extends AbstractCustomerUI {
     }
 
     @Override
-    public CustomerDto additionalGenerateCustomer(String name, String number, String email) {
+    public CustomerDto additionalGenerateCustomer(String name, String number, String email, String password) {
         String family = scannerWrapper.getUserInput("Enter your family: ", Function.identity());
         String nationalCode = scannerWrapper.getUserInput("Enter your nationalCode: ", Function.identity());
-        RealCustomerDto realCustomer = new RealCustomerDto(null ,name, number, email);
+        Date birthDate = scannerWrapper.getUserInput("Enter birthDate(dd-MM-yyyy):" ,
+                input->{
+                    try {
+                        return  new SimpleDateFormat("dd-MM-yyyy").parse(input);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                );
+        RealCustomerDto realCustomer = new RealCustomerDto(null ,name, number, email,password);
         realCustomer.setFamily(family);
         realCustomer.setNationalCode(nationalCode);
+        realCustomer.setBirthday(birthDate);
         return realCustomer;
     }
 

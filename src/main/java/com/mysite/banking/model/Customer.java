@@ -24,15 +24,14 @@ public abstract class Customer implements Serializable {
     private String number;
     private String email;
     private final CustomerType type;
-    @JsonIgnore
     private Integer id;
     private boolean deleted;
+    private String password;
 
 
-    private static final AtomicInteger ID_COUNTER = new AtomicInteger(1);
+
 
     public Customer(CustomerType type) {
-        this.id = ID_COUNTER.getAndIncrement();
         this.type = type;
         this.deleted = false;
     }
@@ -42,7 +41,6 @@ public abstract class Customer implements Serializable {
         this.number = number;
         this.email = email;
         this.type = type;
-        this.id = ID_COUNTER.getAndIncrement();
         this.deleted = false;
     }
 

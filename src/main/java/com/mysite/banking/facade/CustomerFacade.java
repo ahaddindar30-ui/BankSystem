@@ -31,4 +31,8 @@ public interface CustomerFacade {
     void saveOnExit();
 
     void addData(String name) throws FileException;
+
+    Boolean login(String userName, String password);
+
+    CustomerDto printCustomersByEmail(String email)throws  CustomerNotFindException;
 }

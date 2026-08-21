@@ -8,13 +8,17 @@ import com.mysite.banking.model.RealCustomer;
 import com.mysite.banking.service.CustomerService;
 import com.mysite.banking.service.exception.*;
 import com.mysite.banking.util.MapperWrapper;
+import com.mysite.banking.util.PasswordEncoder;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class CustomerServiceImpl implements CustomerService {
+    private static AtomicInteger ID_COUNTER = new AtomicInteger(1);
     private ArrayList<Customer> customers;
     private final ObjectMapper objectMapper;
 
@@ -68,8 +72,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void addCustomers(Customer customer) throws DuplicateCustomerException {
-        List<Customer>collect = customers.stream()
-                .filter(it-> it.equals(customer))
+        List<Customer> collect = customers.stream()
+                .filter(it -> it.equals(customer))
                 .findAny()
                 .stream()
                 .toList();
@@ -77,11 +81,11 @@ public class CustomerServiceImpl implements CustomerService {
         if (!collect.isEmpty()) {
             throw new DuplicateCustomerException();
         }
+        customer.setId(ID_COUNTER.getAndIncrement());
+        customer.setPassword(PasswordEncoder.encoderPassword(customer.getPassword(), customer.getId()));
         customers.add(customer);
 
     }
-
-
 
 
     @Override
@@ -159,12 +163,27 @@ public class CustomerServiceImpl implements CustomerService {
             case FileType.SERIALIZE -> loadSerialize(name);
         }
 
+        updateIdCounter();
+
+    }
+
+    private void updateIdCounter() {
+        Customer maxIdCustomer = customers.stream()
+                .max((customer1, customer2) ->
+                        Integer.compare(customer1.getId(), customer2.getId()))
+                .orElse(null);
+        if (maxIdCustomer == null) {
+            ID_COUNTER = new AtomicInteger(1);
+        } else {
+            ID_COUNTER = new AtomicInteger(maxIdCustomer.getId() +1);
+        }
     }
 
     @Override
     public void initData() {
         try {
             loadJson("init Customer Data");
+            updateIdCounter();
         } catch (FileException ignored) {
 
         }
@@ -182,12 +201,34 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void addData(String name) throws FileException {
         try {
-            ArrayList<Customer> newCustomers  = objectMapper.readValue(new File(name + ".json"),
-                    new TypeReference<ArrayList<Customer>>() {});
+            ArrayList<Customer> newCustomers = objectMapper.readValue(new File(name + ".json"),
+                    new TypeReference<ArrayList<Customer>>() {
+                    });
             customers.addAll(newCustomers);
         } catch (IOException e) {
             throw new FileException();
         }
+    }
+
+    @Override
+    public Boolean login(String userName, String password) {
+        try {
+            Customer customer = printCustomersByEmail(userName);
+            return Objects.equals(
+                    customer.getPassword(),
+                    PasswordEncoder.encoderPassword(password, customer.getId()));
+        } catch (CustomerNotFindException e) {
+            return false;
+        }
+
+    }
+
+    @Override
+    public Customer printCustomersByEmail(String email) throws CustomerNotFindException {
+        return customers.stream()
+                .filter(customer -> !customer.isDeleted())
+                .filter(customer -> customer.getEmail().equalsIgnoreCase(email))
+                .findFirst().orElseThrow(CustomerNotFindException::new);
     }
 
     private void loadSerialize(String name) throws FileException {

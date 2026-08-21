@@ -30,4 +30,9 @@ public interface CustomerService {
     void saveOnExit();
 
     void addData(String name) throws FileException;
+
+    Boolean login(String userName, String password);
+
+    Customer printCustomersByEmail(String email) throws CustomerNotFindException;
+
 }

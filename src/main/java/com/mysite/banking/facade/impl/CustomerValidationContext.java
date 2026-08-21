@@ -3,13 +3,17 @@ package com.mysite.banking.facade.impl;
 import com.mysite.banking.dto.CustomerDto;
 import com.mysite.banking.dto.LegalCustomerDto;
 import com.mysite.banking.dto.RealCustomerDto;
+import com.mysite.banking.facade.CustomerFacade;
+import com.mysite.banking.service.exception.CustomerNotFindException;
 import com.mysite.banking.service.exception.ValidationException;
 import com.mysite.banking.service.validation.ValidationContext;
 import com.mysite.banking.util.RegexValidator;
 
 public class CustomerValidationContext extends ValidationContext<CustomerDto> {
+    protected final CustomerFacade customerFacade;
 
-    public  CustomerValidationContext(){
+    public  CustomerValidationContext(CustomerFacade customerFacade){
+       this.customerFacade = customerFacade;
         //  name validation
         addValidation(customer -> {
             String name = customer.getName();
@@ -27,8 +31,20 @@ public class CustomerValidationContext extends ValidationContext<CustomerDto> {
         //  email validation
         addValidation(customer -> {
             String email = customer.getEmail();
-            if (!RegexValidator.regexEmail(email) || email.trim().isEmpty()) {
-                throw new ValidationException("Invalid format email ");
+
+            if (email == null || email.trim().isEmpty()) {
+                throw new ValidationException("Email cannot be null or empty");
+            }
+            try {
+                customerFacade.printCustomersByEmail(email);
+                throw new ValidationException("Email must not be duplicated");
+
+            } catch (CustomerNotFindException ignored) {
+
+            }
+
+            if (!RegexValidator.regexEmail(email)) {
+                throw new ValidationException("Invalid email format");
             }
         });
 

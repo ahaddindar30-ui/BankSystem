@@ -35,7 +35,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
     private CustomerFacadeImpl() {
         this.customerMapStruct = Mappers.getMapper(CustomerMapStruct.class);
         this.customerService = CustomerServiceImpl.getInstance();
-        this.validationContext = new CustomerValidationContext();
+        this.validationContext = new CustomerValidationContext(this);
     }
 
 
@@ -113,5 +113,15 @@ public class CustomerFacadeImpl implements CustomerFacade {
     @Override
     public void addData(String name) throws FileException {
         customerService.addData(name);
+    }
+
+    @Override
+    public Boolean login(String userName, String password) {
+        return customerService.login(userName, password);
+    }
+
+    @Override
+    public CustomerDto printCustomersByEmail(String email) throws CustomerNotFindException {
+        return customerMapStruct.mapToCustomerDto(customerService.printCustomersByEmail(email));
     }
 }

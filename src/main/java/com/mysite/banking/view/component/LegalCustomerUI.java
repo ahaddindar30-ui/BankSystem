@@ -13,10 +13,10 @@ public class LegalCustomerUI extends AbstractCustomerUI {
     }
 
     @Override
-    public CustomerDto additionalGenerateCustomer(String name, String number, String email) {
+    public CustomerDto additionalGenerateCustomer(String name, String number, String email, String password) {
         String fax = scannerWrapper.getUserInput("Enter your fax number: ", Function.identity());
         String companyRegistration = scannerWrapper.getUserInput("Enter your company Registration: ", Function.identity());
-        LegalCustomerDto legalCustomer = new LegalCustomerDto(null ,name, number, email);
+        LegalCustomerDto legalCustomer = new LegalCustomerDto(null ,name, number, email,password);
         legalCustomer.setFaxNumber(fax);
         legalCustomer.setCompanyRegistration(companyRegistration);
         return legalCustomer;

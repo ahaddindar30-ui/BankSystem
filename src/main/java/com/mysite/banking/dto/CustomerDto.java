@@ -1,5 +1,6 @@
 package com.mysite.banking.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mysite.banking.model.CustomerType;
 import lombok.*;
 
@@ -14,7 +15,10 @@ public abstract class CustomerDto {
     private String name;
     private String number;
     private String email;
+    @JsonIgnore
+    private String password;
     private final CustomerType type;
+
 
 
 

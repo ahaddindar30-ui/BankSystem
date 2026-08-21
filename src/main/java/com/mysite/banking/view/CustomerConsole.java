@@ -32,6 +32,7 @@ public class CustomerConsole extends BaseConsole {
         System.out.println("8.Save data");
         System.out.println("9.Load data");
         System.out.println("10.Add data");
+        System.out.println("11.Login");
         System.out.println();
     }
     public void menu() {
@@ -73,6 +74,9 @@ public class CustomerConsole extends BaseConsole {
                     case 10:
                         addData();
                         break;
+                    case 11:
+                        login();
+                        break;
                     default:
                         System.out.println("Invalid Choice");
                 }
@@ -80,6 +84,20 @@ public class CustomerConsole extends BaseConsole {
                 System.out.println(ex.getMessage());
             }
         } while (choice != 0);
+
+    }
+
+
+
+    private void login() {
+        String userName = scannerWrapper.getUserInput("Enter your name: ", Function.identity());
+        String password = scannerWrapper.getUserInput("Enter your password: ", Function.identity());
+       Boolean validate = customerFacade.login(userName , password);
+       if (validate) {
+           System.out.println("Welcome to the system.");
+       }else  {
+           System.out.println("username or password is wrong!");
+       }
 
     }
 
