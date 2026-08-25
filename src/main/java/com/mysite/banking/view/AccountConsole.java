@@ -2,12 +2,14 @@ package com.mysite.banking.view;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mysite.banking.dto.AccountDto;
+import com.mysite.banking.dto.AmountDto;
 import com.mysite.banking.facade.AccountFacade;
 import com.mysite.banking.facade.impl.AccountFacadeImpl;
-import com.mysite.banking.model.AccountType;
 import com.mysite.banking.model.FileType;
 import com.mysite.banking.service.exception.*;
 
+import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.List;
 import java.util.function.Function;
 
@@ -90,25 +92,28 @@ public class AccountConsole extends BaseConsole {
         } while (choice != 0);
     }
 
-    private void transfer()throws AccountNotFindException, ValidationException  {
+    private void transfer() throws AccountNotFindException, ValidationException {
         int fromAccountId = scannerWrapper.getUserInput("Enter the from account id ", Integer::valueOf);
         int toAccountId = scannerWrapper.getUserInput("Enter the to account id ", Integer::valueOf);
-        Double amount = scannerWrapper.getUserInput("Enter the amount ", Double::valueOf);
-        accountFacade.transfer(fromAccountId, toAccountId, amount);
+        BigDecimal amount = scannerWrapper.getUserInput("Enter the amount ", BigDecimal::new);
+        Currency currency = getCurrency();
+        accountFacade.transfer(fromAccountId, toAccountId, new AmountDto(currency, amount));
     }
 
     private void withdraw() throws AccountNotFindException, ValidationException {
         int accountId = scannerWrapper.getUserInput("Enter the account id ", Integer::valueOf);
-        Double amount = scannerWrapper.getUserInput("Enter the amount ", Double::valueOf);
-        accountFacade.withdraw(accountId, amount);
+        BigDecimal amount = scannerWrapper.getUserInput("Enter the amount ", BigDecimal::new);
+        Currency currency = getCurrency();
+        accountFacade.withdraw(accountId, new AmountDto(currency, amount));
 
     }
 
 
     private void deposit() throws AccountNotFindException {
         int accountId = scannerWrapper.getUserInput("Enter the account id ", Integer::valueOf);
-        Double amount = scannerWrapper.getUserInput("Enter the amount ", Double::valueOf);
-        accountFacade.deposit(accountId, amount);
+        BigDecimal amount = scannerWrapper.getUserInput("Enter the amount ", BigDecimal::new);
+        Currency currency = getCurrency();
+        accountFacade.deposit(accountId, new AmountDto(currency, amount));
     }
 
     private void addAccountData() throws FileException {
@@ -165,18 +170,21 @@ public class AccountConsole extends BaseConsole {
 
     public void addAccounts() {
         System.out.println("Account type:");
-        System.out.println("1.EURO");
-        System.out.println("2.DOLLAR");
+        System.out.println("1.EUR");
+        System.out.println("2.USD");
         System.out.println();
         int choice = scannerWrapper.getUserInput("Enter your choice: ", Integer::valueOf);
         try {
-            AccountType type = AccountType.fromValue(choice);
+            Currency currency;
+            if (choice == 1) {
+                currency = Currency.getInstance("EUR");
+            } else {
+                currency = Currency.getInstance("USD");
+            }
             int number = scannerWrapper.getUserInput("Enter Customer id : ", Integer::valueOf);
-            AccountDto accountDto = new AccountDto(null, type, 0.0, number);
+            AccountDto accountDto = new AccountDto(null, new AmountDto(currency, BigDecimal.ZERO), number);
             accountFacade.addAccounts(accountDto);
-        } catch (InvalidType ex) {
-            System.out.println("Invalid Account Type exception.");
-            addAccounts();
+
         } catch (ValidationException e) {
             System.out.println(e.getMessage());
             addAccounts();
@@ -234,5 +242,27 @@ public class AccountConsole extends BaseConsole {
 
     public void initData() {
         accountFacade.initData();
+    }
+
+
+    private Currency getCurrency() {
+        while (true) {
+            System.out.println("Currency:");
+            System.out.println("1. EUR");
+            System.out.println("2. USD");
+            System.out.println("3. GBP");
+            System.out.println();
+            int choice = scannerWrapper.getUserInput("Enter your choice: ",Integer::valueOf);
+
+            if (choice == 1) {
+                return Currency.getInstance("EUR");
+            } else if (choice == 2) {
+                return Currency.getInstance("USD");
+            } else if (choice == 3) {
+                return Currency.getInstance("GBP");
+            }
+
+            System.out.println("Invalid currency choice.");
+        }
     }
 }

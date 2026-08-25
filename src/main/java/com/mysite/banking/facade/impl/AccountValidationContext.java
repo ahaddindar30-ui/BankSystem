@@ -1,11 +1,11 @@
 package com.mysite.banking.facade.impl;
 
 import com.mysite.banking.dto.AccountDto;
-
 import com.mysite.banking.facade.CustomerFacade;
 import com.mysite.banking.service.exception.CustomerNotFindException;
 import com.mysite.banking.service.exception.ValidationException;
 import com.mysite.banking.service.validation.ValidationContext;
+import java.math.BigDecimal;
 
 
 public class AccountValidationContext extends ValidationContext<AccountDto> {
@@ -15,8 +15,8 @@ public class AccountValidationContext extends ValidationContext<AccountDto> {
         this.customerFacade = CustomerFacadeImpl.getInstance();
         //  balance validation
         addValidation(accountDto -> {
-            Double balance = accountDto.getBalance();
-            if (balance < 0) {
+            BigDecimal balance = accountDto.getBalance().getValue();
+            if (balance.compareTo(BigDecimal.ZERO) < 0) {
                 throw new ValidationException("Balance can not by lass than zero.");
             }
         });
@@ -27,7 +27,8 @@ public class AccountValidationContext extends ValidationContext<AccountDto> {
             try {
                 customerFacade.getCustomerById(customerId);
             } catch (CustomerNotFindException e) {
-                throw new ValidationException("Customer id is not valid.");            }
+                throw new ValidationException("Customer id is not valid.");
+            }
         });
 
     }

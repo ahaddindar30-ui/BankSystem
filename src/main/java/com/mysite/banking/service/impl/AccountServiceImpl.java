@@ -3,19 +3,33 @@ package com.mysite.banking.service.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysite.banking.model.Account;
+import com.mysite.banking.model.Amount;
 import com.mysite.banking.model.FileType;
 import com.mysite.banking.service.AccountService;
 import com.mysite.banking.service.exception.*;
+import com.mysite.banking.util.AmountUtil;
 import com.mysite.banking.util.MapperWrapper;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public class AccountServiceImpl implements AccountService {
     private ArrayList<Account> accounts;
     private final ObjectMapper objectMapper;
+
+    private Map<Integer, Lock> locks;
+    private AmountUtil amountUtil;
+
+    private Lock getLock(int accountId) {
+        locks.putIfAbsent(accountId, new ReentrantLock());
+        return locks.get(accountId);
+    }
 
 
     private static final AccountServiceImpl INSTANCE;
@@ -31,6 +45,8 @@ public class AccountServiceImpl implements AccountService {
     private AccountServiceImpl() {
         this.accounts = new ArrayList<>();
         this.objectMapper = MapperWrapper.getInstance();
+        this.locks = new HashMap<>();
+        this.amountUtil = AmountUtil.getInstance();
 
 
     }
@@ -163,30 +179,56 @@ public class AccountServiceImpl implements AccountService {
 
     }
 
-    @Override
-    public void deposit(int accountId, Double amount) throws AccountNotFindException {
-        Account accountById = getAccountById(accountId);
-        accountById.setBalance(accountById.getBalance() + amount);
+    public void deposit(int accountId, Amount amount) throws AccountNotFindException {
+        Lock lock = getLock(accountId);
+        lock.lock();
+        try {
+            Account accountById = getAccountById(accountId);
+            accountById.setBalance(amountUtil.add(accountById.getBalance(), amount));
+        } finally {
+            lock.unlock();
+        }
+
     }
 
-    @Override
-    public void withdraw(int accountId, Double amount) throws AccountNotFindException, ValidationException {
-        Account accountById = getAccountById(accountId);
-        if (amount > accountById.getBalance()) {
-            throw new ValidationException("The amount is larger than balance!");
+    public void withdraw(int accountId, Amount amount) throws AccountNotFindException, ValidationException {
+        Lock lock = getLock(accountId);
+        lock.lock();
+        try {
+            Account accountById = getAccountById(accountId);
+            if (amountUtil.compareTo(amount, accountById.getBalance()) > 0) {
+                throw new ValidationException("The amount is larger than balance!");
+            }
+            accountById.setBalance(amountUtil.subtract(accountById.getBalance(), amount));
+        } finally {
+            lock.unlock();
         }
-        accountById.setBalance(accountById.getBalance() - amount);
+
     }
 
-    @Override
-    public void transfer(int fromAccountId, int toAccountId, Double amount) throws AccountNotFindException, ValidationException {
-        Account fromAccount = getAccountById(fromAccountId);
-        Account toAccount = getAccountById(toAccountId);
-        if (amount > fromAccount.getBalance()) {
-            throw new ValidationException("The amount is larger than from account balance!");
+    public void transfer(int fromAccountId, int toAccountId, Amount amount) throws AccountNotFindException, ValidationException {
+        Lock fromLock = getLock(fromAccountId);
+        Lock toLock = getLock(toAccountId);
+
+        Lock firstLock = fromAccountId < toAccountId ? fromLock : toLock;
+        Lock secondLock = fromAccountId < toAccountId ? toLock : fromLock;
+        firstLock.lock();
+        secondLock.lock();
+        try {
+            Account fromAccount = getAccountById(fromAccountId);
+            Account toAccount = getAccountById(toAccountId);
+
+
+            if (amountUtil.compareTo(amount, fromAccount.getBalance()) > 0) {
+                throw new ValidationException("The amount is larger than from account balance!");
+            }
+            fromAccount.setBalance(amountUtil.subtract(fromAccount.getBalance(), amount));
+            toAccount.setBalance(amountUtil.add(toAccount.getBalance(), amount));
+        } finally {
+            secondLock.unlock();
+            firstLock.unlock();
         }
-        fromAccount.setBalance(fromAccount.getBalance() - amount);
-        toAccount.setBalance(toAccount.getBalance() + amount);
+
     }
 
     private void loadSerialize(String name) throws FileException {

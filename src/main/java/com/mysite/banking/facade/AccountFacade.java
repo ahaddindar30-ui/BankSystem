@@ -1,6 +1,7 @@
 package com.mysite.banking.facade;
 
 import com.mysite.banking.dto.AccountDto;
+import com.mysite.banking.dto.AmountDto;
 import com.mysite.banking.model.FileType;
 import com.mysite.banking.service.exception.*;
 
@@ -32,9 +33,9 @@ public interface AccountFacade {
 
     List<AccountDto> printAccountByCustomerName(String name);
 
-    void deposit(int accountId, Double amount)throws AccountNotFindException;
+    void deposit(int accountId, AmountDto amount)throws AccountNotFindException;
 
-    void withdraw(int accountId, Double amount)throws AccountNotFindException,ValidationException ;
+    void withdraw(int accountId, AmountDto amount)throws AccountNotFindException,ValidationException ;
 
-    void transfer(int fromAccountId, int toAccountId, Double amount)throws AccountNotFindException, ValidationException ;
+    void transfer(int fromAccountId, int toAccountId, AmountDto amount)throws AccountNotFindException, ValidationException ;
 }

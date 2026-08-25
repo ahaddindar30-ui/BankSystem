@@ -1,6 +1,7 @@
 package com.mysite.banking.facade.impl;
 
 import com.mysite.banking.dto.AccountDto;
+import com.mysite.banking.dto.AmountDto;
 import com.mysite.banking.facade.AccountFacade;
 import com.mysite.banking.mapper.AccountMapStruct;
 import com.mysite.banking.model.Account;
@@ -22,7 +23,7 @@ public class AccountFacadeImpl implements AccountFacade {
 
     private ValidationContext<AccountDto> validationContext;
 
-    private final AccountService accountService;
+    private AccountService accountService;
     private final CustomerService customerService;
     private final AccountMapStruct accountMapStruct;
 
@@ -30,6 +31,10 @@ public class AccountFacadeImpl implements AccountFacade {
     private static final AccountFacadeImpl INSTANCE;
 
     public static AccountFacadeImpl getInstance() {
+        return INSTANCE;
+    }
+    public static AccountFacadeImpl getInstance(AccountService accountService) {
+        INSTANCE.accountService = accountService;
         return INSTANCE;
     }
 
@@ -118,17 +123,17 @@ public class AccountFacadeImpl implements AccountFacade {
     }
 
     @Override
-    public void deposit(int accountId, Double amount) throws AccountNotFindException {
-        accountService.deposit(accountId, amount);
+    public void deposit(int accountId, AmountDto amount) throws AccountNotFindException {
+        accountService.deposit(accountId, accountMapStruct.mapToAmount(amount));
     }
 
     @Override
-    public void withdraw(int accountId, Double amount) throws AccountNotFindException, ValidationException {
-        accountService.withdraw(accountId, amount);
+    public void withdraw(int accountId, AmountDto amount) throws AccountNotFindException, ValidationException {
+        accountService.withdraw(accountId, accountMapStruct.mapToAmount(amount));
     }
 
     @Override
-    public void transfer(int fromAccountId, int toAccountId, Double amount) throws AccountNotFindException, ValidationException {
-        accountService.transfer(fromAccountId, toAccountId, amount);
+    public void transfer(int fromAccountId, int toAccountId, AmountDto amountDto) throws AccountNotFindException, ValidationException {
+        accountService.transfer(fromAccountId, toAccountId, accountMapStruct.mapToAmount(amountDto));
     }
 }

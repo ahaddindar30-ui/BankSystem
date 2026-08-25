@@ -12,8 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Account implements Serializable {
     private static final AtomicInteger ID_COUNTER = new AtomicInteger(1);
     private Integer id;
-    private AccountType type;
-    private Double balance;
+    private Amount balance;
     private Integer customerId;
     private boolean deleted;
     public Account() {
@@ -21,9 +20,8 @@ public class Account implements Serializable {
         this.deleted=false;
     }
 
-    public Account(AccountType type, Double balance, Integer customerId) {
+    public Account(Amount balance, Integer customerId) {
         this.id = ID_COUNTER.getAndIncrement();
-        this.type = type;
         this.balance = balance;
         this.customerId = customerId;
         this.deleted = false;
