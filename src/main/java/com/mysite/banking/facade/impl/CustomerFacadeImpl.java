@@ -10,7 +10,6 @@ import com.mysite.banking.service.exception.*;
 import com.mysite.banking.service.impl.CustomerServiceImpl;
 import com.mysite.banking.service.validation.ValidationContext;
 import org.mapstruct.factory.Mappers;
-
 import java.util.List;
 
 public class CustomerFacadeImpl implements CustomerFacade {
@@ -18,13 +17,18 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
     private ValidationContext<CustomerDto> validationContext;
 
-    private final CustomerService customerService;
+    private  CustomerService customerService;
     private final CustomerMapStruct customerMapStruct;
 
 
     private static final CustomerFacadeImpl INSTANCE;
 
     public static CustomerFacadeImpl getInstance() {
+        return INSTANCE;
+    }
+    public static CustomerFacadeImpl getInstance(CustomerService customerService) {
+        INSTANCE.customerService = customerService;
+        INSTANCE.validationContext = new CustomerValidationContext(INSTANCE);
         return INSTANCE;
     }
 
