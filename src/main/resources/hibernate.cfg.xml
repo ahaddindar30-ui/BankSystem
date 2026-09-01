@@ -18,7 +18,7 @@
         </property>
 
         <property name="hibernate.connection.password">
-            ${DB_PASSWORD}
+            ahad132
         </property>
 
         <property name="hibernate.show_sql">
