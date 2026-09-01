@@ -248,65 +248,7 @@ class CustomerFacadeTest {
                 .getCustomerById(999);
     }
 
-    @Test
-    void saveData_shouldCallService()
-            throws Exception {
 
-        facade.saveData(
-                "customers",
-                FileType.JSON
-        );
-
-        verify(customerService)
-                .saveData(
-                        "customers",
-                        FileType.JSON
-                );
-    }
-
-    @Test
-    void loadData_shouldCallService()
-            throws Exception {
-
-        facade.loadData(
-                "customers",
-                FileType.JSON
-        );
-
-        verify(customerService)
-                .loadData(
-                        "customers",
-                        FileType.JSON
-                );
-    }
-
-    @Test
-    void initData_shouldCallService() {
-
-        facade.initData();
-
-        verify(customerService)
-                .initData();
-    }
-
-    @Test
-    void saveOnExit_shouldCallService() {
-
-        facade.saveOnExit();
-
-        verify(customerService)
-                .saveOnExit();
-    }
-
-    @Test
-    void addData_shouldCallService()
-            throws Exception {
-
-        facade.addData("customers");
-
-        verify(customerService)
-                .addData("customers");
-    }
 
     @Test
     void login_shouldReturnTrue_whenCredentialsAreCorrect() {

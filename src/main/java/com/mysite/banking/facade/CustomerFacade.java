@@ -22,15 +22,6 @@ public interface CustomerFacade {
     List<CustomerDto> getDeletedCustomers() throws CustomerNotFindException, EmptyCustomerException;
 
     CustomerDto getCustomerById(Integer id) throws CustomerNotFindException;
-    void saveData(String name, FileType fileType) throws FileException;
-
-    void loadData(String name, FileType fileType) throws FileException;
-
-    void initData();
-
-    void saveOnExit();
-
-    void addData(String name) throws FileException;
 
     Boolean login(String userName, String password);
 

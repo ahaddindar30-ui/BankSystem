@@ -4,7 +4,6 @@ import com.mysite.banking.dto.CustomerDto;
 import com.mysite.banking.facade.CustomerFacade;
 import com.mysite.banking.mapper.CustomerMapStruct;
 import com.mysite.banking.model.Customer;
-import com.mysite.banking.model.FileType;
 import com.mysite.banking.service.CustomerService;
 import com.mysite.banking.service.exception.*;
 import com.mysite.banking.service.impl.CustomerServiceImpl;
@@ -74,6 +73,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
         validationContext.validate(customerDto);
         Customer customer = customerService.getCustomerById(customerDto.getId());
         customerMapStruct.mapToCustomer(customerDto, customer);
+        customerService.updateCustomers(customer);
 
     }
 
@@ -93,30 +93,6 @@ public class CustomerFacadeImpl implements CustomerFacade {
     public CustomerDto getCustomerById(Integer id) throws CustomerNotFindException {
         return customerMapStruct.mapToCustomerDto(
                 customerService.getCustomerById(id));
-    }
-
-    public void saveData(String name, FileType fileType) throws FileException {
-        customerService.saveData(name ,fileType);
-    }
-
-    @Override
-    public void loadData(String name, FileType fileType) throws FileException {
-        customerService.loadData(name ,fileType);
-    }
-
-    @Override
-    public void initData() {
-        customerService.initData();
-    }
-
-    @Override
-    public void saveOnExit() {
-        customerService.saveOnExit();
-    }
-
-    @Override
-    public void addData(String name) throws FileException {
-        customerService.addData(name);
     }
 
     @Override

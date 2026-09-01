@@ -12,7 +12,6 @@ public class ConsoleUI extends BaseConsole implements AutoCloseable {
     }
 
     private void saveOnExit() {
-        customerConsole.saveOnExit();
         accountConsole.saveOnExit();
     }
     public void printMainMenu() {
@@ -23,7 +22,7 @@ public class ConsoleUI extends BaseConsole implements AutoCloseable {
         System.out.println();
     }
     public void startMenu() {
-        customerConsole.initData();
+
         accountConsole.initData();
         Runtime.getRuntime().addShutdownHook(new Thread(this::saveOnExit));
         int choice;

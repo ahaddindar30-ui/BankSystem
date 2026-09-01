@@ -5,7 +5,6 @@ import com.mysite.banking.dto.CustomerDto;
 import com.mysite.banking.facade.CustomerFacade;
 import com.mysite.banking.facade.impl.CustomerFacadeImpl;
 import com.mysite.banking.model.CustomerType;
-import com.mysite.banking.model.FileType;
 import com.mysite.banking.service.exception.*;
 import com.mysite.banking.view.component.AbstractCustomerUI;
 
@@ -29,12 +28,10 @@ public class CustomerConsole extends BaseConsole {
         System.out.println("5.Edit Customer By id");
         System.out.println("6.Delete Customers By id");
         System.out.println("7.Print all deleted customers");
-        System.out.println("8.Save data");
-        System.out.println("9.Load data");
-        System.out.println("10.Add data");
-        System.out.println("11.Login");
+        System.out.println("8.Login");
         System.out.println();
     }
+
     public void menu() {
         int choice;
         do {
@@ -66,21 +63,12 @@ public class CustomerConsole extends BaseConsole {
                         printAllDeletedCustomers();
                         break;
                     case 8:
-                        saveData();
-                        break;
-                    case 9:
-                        loadData();
-                        break;
-                    case 10:
-                        addData();
-                        break;
-                    case 11:
                         login();
                         break;
                     default:
                         System.out.println("Invalid Choice");
                 }
-            } catch (CustomerNotFindException | FileException | EmptyCustomerException ex) {
+            } catch (CustomerNotFindException | EmptyCustomerException ex) {
                 System.out.println(ex.getMessage());
             }
         } while (choice != 0);
@@ -88,16 +76,15 @@ public class CustomerConsole extends BaseConsole {
     }
 
 
-
     private void login() {
-        String userName = scannerWrapper.getUserInput("Enter your name: ", Function.identity());
+        String userName = scannerWrapper.getUserInput("Enter your email: ", Function.identity());
         String password = scannerWrapper.getUserInput("Enter your password: ", Function.identity());
-       Boolean validate = customerFacade.login(userName , password);
-       if (validate) {
-           System.out.println("Welcome to the system.");
-       }else  {
-           System.out.println("username or password is wrong!");
-       }
+        Boolean validate = customerFacade.login(userName, password);
+        if (validate) {
+            System.out.println("Welcome to the system.");
+        } else {
+            System.out.println("username or password is wrong!");
+        }
 
     }
 
@@ -193,52 +180,5 @@ public class CustomerConsole extends BaseConsole {
         }
 
 
-    }
-
-
-
-    private void saveData() throws FileException {
-        System.out.println("File type:");
-        System.out.println("1.Serialaze");
-        System.out.println("2.Jaon");
-        System.out.println();
-        int choice = scannerWrapper.getUserInput("Enter your choice: ", Integer::valueOf);
-        try {
-            FileType fileType = FileType.fromValue(choice);
-            String name = scannerWrapper.getUserInput("Enter your file name: ", Function.identity());
-            customerFacade.saveData(name, fileType);
-        } catch (InvalidType ex) {
-            System.out.println("Invalid Type exception.");
-            saveData();
-        }
-    }
-
-    private void loadData() throws FileException {
-        System.out.println("File type:");
-        System.out.println("1.Serialaze");
-        System.out.println("2.Jaon");
-        System.out.println();
-        int choice = scannerWrapper.getUserInput("Enter your choice: ", Integer::valueOf);
-
-        try {
-            FileType fileType = FileType.fromValue(choice);
-            String name = scannerWrapper.getUserInput("Enter your file name: ", Function.identity());
-            customerFacade.loadData(name, fileType);
-        } catch (InvalidType ex) {
-            System.out.println("Invalid Type exception.");
-            loadData();
-        }
-    }
-
-    private void addData() throws FileException {
-        String name = scannerWrapper.getUserInput("Enter your json file name: ", Function.identity());
-        customerFacade.addData(name);
-
-    }
-    public void saveOnExit() {
-        customerFacade.saveOnExit();
-    }
-    public void initData() {
-        customerFacade.initData();
     }
 }

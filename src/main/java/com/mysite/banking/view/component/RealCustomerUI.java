@@ -18,16 +18,16 @@ public class RealCustomerUI extends AbstractCustomerUI {
     public CustomerDto additionalGenerateCustomer(String name, String number, String email, String password) {
         String family = scannerWrapper.getUserInput("Enter your family: ", Function.identity());
         String nationalCode = scannerWrapper.getUserInput("Enter your nationalCode: ", Function.identity());
-        Date birthDate = scannerWrapper.getUserInput("Enter birthDate(dd-MM-yyyy):" ,
-                input->{
+        Date birthDate = scannerWrapper.getUserInput("Enter birthDate(dd-MM-yyyy):",
+                input -> {
                     try {
-                        return  new SimpleDateFormat("dd-MM-yyyy").parse(input);
+                        return new SimpleDateFormat("dd-MM-yyyy").parse(input);
                     } catch (ParseException e) {
                         throw new RuntimeException(e);
                     }
                 }
-                );
-        RealCustomerDto realCustomer = new RealCustomerDto(null ,name, number, email,password);
+        );
+        RealCustomerDto realCustomer = new RealCustomerDto(null, name, number, email, password);
         realCustomer.setFamily(family);
         realCustomer.setNationalCode(nationalCode);
         realCustomer.setBirthday(birthDate);
@@ -47,6 +47,18 @@ public class RealCustomerUI extends AbstractCustomerUI {
         realCustomer.setFamily(family);
         String nationalCode = scannerWrapper.getUserInput("Enter your new nationalCode: ", Function.identity());
         realCustomer.setNationalCode(nationalCode);
+        Date birthDate = scannerWrapper.getUserInput("Enter birthDate(dd-MM-yyyy):",
+                input -> {
+                    try {
+                        return new SimpleDateFormat("dd-MM-yyyy").parse(input);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        );
+
+        realCustomer.setBirthday(birthDate);
+
     }
 
 

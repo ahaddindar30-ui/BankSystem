@@ -21,6 +21,16 @@ public class CustomerValidationContext extends ValidationContext<CustomerDto> {
                 throw new ValidationException("Customer name is empty or null");
             }
         });
+
+        //companyName validation
+        addValidation(customer -> {
+            if (customer instanceof LegalCustomerDto) {
+                String companyName = ((LegalCustomerDto) customer).getCompanyName();
+                if (companyName == null || companyName.trim().isEmpty()) {
+                    throw new ValidationException("Customer companyName is empty or null");
+                }
+            }
+        });
         //  number validation
         addValidation(customer -> {
             String number = customer.getNumber();
