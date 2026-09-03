@@ -17,7 +17,7 @@ public class LegalCustomerUI extends AbstractCustomerUI {
         String companyName = scannerWrapper.getUserInput("Enter your company name: ", Function.identity());
         String fax = scannerWrapper.getUserInput("Enter your fax number company: ", Function.identity());
         String companyRegistration = scannerWrapper.getUserInput("Enter your company Registration: ", Function.identity());
-        LegalCustomerDto legalCustomer = new LegalCustomerDto(null ,name, number, email,password);
+        LegalCustomerDto legalCustomer = new LegalCustomerDto(null, name, number, email, password);
         legalCustomer.setFaxNumber(fax);
         legalCustomer.setCompanyRegistration(companyRegistration);
         legalCustomer.setCompanyName(companyName);

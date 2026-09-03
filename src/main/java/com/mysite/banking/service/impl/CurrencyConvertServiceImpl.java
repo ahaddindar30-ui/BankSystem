@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class CurrencyConvertServiceImpl implements CurrencyConvertService {
 
-    private  Map<Currency, BigDecimal> currencyRate;
+    private Map<Currency, BigDecimal> currencyRate;
     private static final CurrencyConvertServiceImpl INSTANCE;
 
     public static CurrencyConvertServiceImpl getInstance() {
@@ -22,8 +22,7 @@ public class CurrencyConvertServiceImpl implements CurrencyConvertService {
     }
 
 
-
-    private CurrencyConvertServiceImpl(){
+    private CurrencyConvertServiceImpl() {
         currencyRate = new HashMap<>();
         currencyRate.put(Currency.getInstance("USD"), BigDecimal.ONE);
         currencyRate.put(Currency.getInstance("EUR"), new BigDecimal("0.89"));
@@ -32,13 +31,12 @@ public class CurrencyConvertServiceImpl implements CurrencyConvertService {
     }
 
 
-
     @Override
     public BigDecimal convertCurrency(BigDecimal amount, Currency baseCurrency, Currency destinationCurrency) {
         BigDecimal baseRate = currencyRate.get(baseCurrency);
         BigDecimal destinationRate = currencyRate.get(destinationCurrency);
         BigDecimal convertedAmount = amount.multiply(
-                destinationRate.divide(baseRate,5, RoundingMode.HALF_EVEN)
+                destinationRate.divide(baseRate, 5, RoundingMode.HALF_EVEN)
         );
 
         return convertedAmount.setScale(2, RoundingMode.HALF_UP);

@@ -5,7 +5,6 @@ import com.mysite.banking.dto.AccountDto;
 import com.mysite.banking.dto.AmountDto;
 import com.mysite.banking.facade.AccountFacade;
 import com.mysite.banking.facade.impl.AccountFacadeImpl;
-import com.mysite.banking.model.FileType;
 import com.mysite.banking.service.exception.*;
 
 import java.math.BigDecimal;
@@ -85,7 +84,7 @@ public class AccountConsole extends BaseConsole {
     }
 
     private void exportFileJson() throws FileException {
-        String fileName = scannerWrapper.getUserInput("Enter file name: ",Function.identity());
+        String fileName = scannerWrapper.getUserInput("Enter file name: ", Function.identity());
         accountFacade.exportFileJson(fileName);
     }
 

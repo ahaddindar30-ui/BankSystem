@@ -1,7 +1,6 @@
 package com.mysite.banking.facade;
 
 import com.mysite.banking.dto.CustomerDto;
-import com.mysite.banking.model.FileType;
 import com.mysite.banking.service.exception.*;
 
 import java.util.List;
@@ -15,6 +14,7 @@ public interface CustomerFacade {
     List<CustomerDto> printCustomersByName(String name);
 
     void addCustomers(CustomerDto customer) throws DuplicateCustomerException, ValidationException;
+
     void updateCustomer(CustomerDto customer) throws ValidationException, CustomerNotFindException;
 
     List<CustomerDto> getActiveCustomers() throws CustomerNotFindException, EmptyCustomerException;
@@ -25,7 +25,7 @@ public interface CustomerFacade {
 
     Boolean login(String userName, String password);
 
-    CustomerDto printCustomersByEmail(String email)throws  CustomerNotFindException;
+    CustomerDto printCustomersByEmail(String email) throws CustomerNotFindException;
 
     void exportFileJson(String fileName) throws FileException;
 }

@@ -14,12 +14,15 @@ import java.util.List;
 public interface AccountMapStruct {
 
     List<AccountDto> mapAccountDtoList(List<Account> accountList);
+
     AccountDto mapToAccountDto(Account account);
 
-    @Mapping(target = "id" , ignore = true)
+    @Mapping(target = "id", ignore = true)
     Account mapToAccount(AccountDto accountDto,
-                                                @MappingTarget Account account);
+                         @MappingTarget Account account);
+
     Amount mapToAmount(AmountDto amountDto);
-    @Mapping(target = "id" , ignore = true)
+
+    @Mapping(target = "id", ignore = true)
     Account mapToAccount(AccountDto accountDto);
 }

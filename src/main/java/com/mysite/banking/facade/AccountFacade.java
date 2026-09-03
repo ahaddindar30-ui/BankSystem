@@ -2,7 +2,6 @@ package com.mysite.banking.facade;
 
 import com.mysite.banking.dto.AccountDto;
 import com.mysite.banking.dto.AmountDto;
-import com.mysite.banking.model.FileType;
 import com.mysite.banking.service.exception.*;
 
 import java.util.List;
@@ -12,7 +11,8 @@ public interface AccountFacade {
     void deleteAccountById(Integer id) throws AccountNotFindException;
 
 
-    void addAccounts(AccountDto accountDto) throws  ValidationException;
+    void addAccounts(AccountDto accountDto) throws ValidationException;
+
     void updateAccount(AccountDto accountDto) throws ValidationException, AccountNotFindException;
 
     List<AccountDto> getActiveAccounts() throws EmptyAccountException;
@@ -23,11 +23,11 @@ public interface AccountFacade {
 
     List<AccountDto> printAccountByCustomerName(String name);
 
-    void deposit(int accountId, AmountDto amount)throws AccountNotFindException;
+    void deposit(int accountId, AmountDto amount) throws AccountNotFindException;
 
-    void withdraw(int accountId, AmountDto amount)throws AccountNotFindException,ValidationException ;
+    void withdraw(int accountId, AmountDto amount) throws AccountNotFindException, ValidationException;
 
-    void transfer(int fromAccountId, int toAccountId, AmountDto amount)throws AccountNotFindException, ValidationException ;
+    void transfer(int fromAccountId, int toAccountId, AmountDto amount) throws AccountNotFindException, ValidationException;
 
     void exportFileJson(String fileName) throws FileException;
 }

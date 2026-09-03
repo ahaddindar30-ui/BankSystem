@@ -20,12 +20,4 @@ public abstract class CustomerDto {
     private final CustomerType type;
 
 
-
-
-
-
-
-
-
-
 }

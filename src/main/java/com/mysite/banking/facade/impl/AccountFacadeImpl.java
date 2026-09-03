@@ -32,6 +32,7 @@ public class AccountFacadeImpl implements AccountFacade {
     public static AccountFacadeImpl getInstance() {
         return INSTANCE;
     }
+
     public static AccountFacadeImpl getInstance(AccountService accountService) {
         INSTANCE.accountService = accountService;
         return INSTANCE;

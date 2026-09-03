@@ -9,6 +9,7 @@ import com.mysite.banking.service.exception.*;
 import com.mysite.banking.service.impl.CustomerServiceImpl;
 import com.mysite.banking.service.validation.ValidationContext;
 import org.mapstruct.factory.Mappers;
+
 import java.util.List;
 
 public class CustomerFacadeImpl implements CustomerFacade {
@@ -16,7 +17,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
     private ValidationContext<CustomerDto> validationContext;
 
-    private  CustomerService customerService;
+    private CustomerService customerService;
     private final CustomerMapStruct customerMapStruct;
 
 
@@ -25,6 +26,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
     public static CustomerFacadeImpl getInstance() {
         return INSTANCE;
     }
+
     public static CustomerFacadeImpl getInstance(CustomerService customerService) {
         INSTANCE.customerService = customerService;
         INSTANCE.validationContext = new CustomerValidationContext(INSTANCE);
@@ -40,8 +42,6 @@ public class CustomerFacadeImpl implements CustomerFacade {
         this.customerService = CustomerServiceImpl.getInstance();
         this.validationContext = new CustomerValidationContext(this);
     }
-
-
 
 
     @Override
@@ -63,8 +63,8 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
     @Override
     public void addCustomers(CustomerDto customerDto) throws DuplicateCustomerException, ValidationException {
-    validationContext.validate(customerDto);
-    customerService.addCustomers(customerMapStruct.mapToCustomer(customerDto));
+        validationContext.validate(customerDto);
+        customerService.addCustomers(customerMapStruct.mapToCustomer(customerDto));
 
     }
 

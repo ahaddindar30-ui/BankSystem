@@ -13,6 +13,7 @@ public interface CustomerService {
     List<Customer> printCustomersByName(String name);
 
     void addCustomers(Customer customer) throws DuplicateCustomerException;
+
     void updateCustomers(Customer customer);
 
     List<Customer> getActiveCustomers() throws CustomerNotFindException, EmptyCustomerException;

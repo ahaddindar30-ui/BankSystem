@@ -1,4 +1,5 @@
 package com.mysite.banking;
+
 import com.mysite.banking.view.ConsoleUI;
 
 public class ApplicationRunner {

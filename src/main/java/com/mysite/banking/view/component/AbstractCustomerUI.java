@@ -21,7 +21,7 @@ public abstract class AbstractCustomerUI {
         String number = scannerWrapper.getUserInput("Enter your number: ", Function.identity());
         String email = scannerWrapper.getUserInput("Enter your email: ", Function.identity());
         String password = scannerWrapper.getUserInput("Enter your password: ", Function.identity());
-        return additionalGenerateCustomer(name, number, email,password);
+        return additionalGenerateCustomer(name, number, email, password);
     }
 
 

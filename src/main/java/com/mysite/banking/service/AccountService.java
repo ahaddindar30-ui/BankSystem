@@ -19,11 +19,11 @@ public interface AccountService {
 
     List<Account> getAccountByCustomerId(Integer id);
 
-    void deposit(int accountId, Amount amount)throws AccountNotFindException;
+    void deposit(int accountId, Amount amount) throws AccountNotFindException;
 
-    void withdraw(int accountId, Amount amount)throws AccountNotFindException, ValidationException;
+    void withdraw(int accountId, Amount amount) throws AccountNotFindException, ValidationException;
 
-    void transfer(int fromAccountId, int toAccountId, Amount amount)throws AccountNotFindException, ValidationException ;
+    void transfer(int fromAccountId, int toAccountId, Amount amount) throws AccountNotFindException, ValidationException;
 
     void exportFileJson(String fileName) throws FileException;
 }

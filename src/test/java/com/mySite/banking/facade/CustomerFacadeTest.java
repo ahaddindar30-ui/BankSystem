@@ -250,7 +250,6 @@ class CustomerFacadeTest {
     }
 
 
-
     @Test
     void login_shouldReturnTrue_whenCredentialsAreCorrect() {
 

@@ -5,19 +5,19 @@ import com.mysite.banking.service.exception.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValidationContext <T>{
-    private List<Validation<T>>validations;
+public class ValidationContext<T> {
+    private List<Validation<T>> validations;
 
 
-   public  ValidationContext() {
-       this.validations = new ArrayList<>();
-   }
+    public ValidationContext() {
+        this.validations = new ArrayList<>();
+    }
 
-   public void addValidation(Validation<T> validation){
-       validations.add(validation);
-   }
+    public void addValidation(Validation<T> validation) {
+        validations.add(validation);
+    }
 
-    public void validate (T obgect)throws ValidationException {
+    public void validate(T obgect) throws ValidationException {
         for (Validation<T> validation : validations) {
             validation.validate(obgect);
         }

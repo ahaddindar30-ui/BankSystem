@@ -14,8 +14,8 @@ import java.util.Objects;
 public class CustomerValidationContext extends ValidationContext<CustomerDto> {
     protected final CustomerFacade customerFacade;
 
-    public  CustomerValidationContext(CustomerFacade customerFacade){
-       this.customerFacade = customerFacade;
+    public CustomerValidationContext(CustomerFacade customerFacade) {
+        this.customerFacade = customerFacade;
         //  name validation
         addValidation(customer -> {
             String name = customer.getName();
@@ -52,7 +52,7 @@ public class CustomerValidationContext extends ValidationContext<CustomerDto> {
                 if (!Objects.equals(customer.getId(), customersByEmail.getId())) {
                     throw new ValidationException("Email must not be duplicated");
                 }
-                
+
             } catch (CustomerNotFindException ignored) {
 
             }
@@ -64,8 +64,8 @@ public class CustomerValidationContext extends ValidationContext<CustomerDto> {
 
         //  family validation
         addValidation(customer -> {
-            if (customer instanceof RealCustomerDto){
-                String family = ((RealCustomerDto)customer).getFamily();
+            if (customer instanceof RealCustomerDto) {
+                String family = ((RealCustomerDto) customer).getFamily();
                 if (family == null || family.trim().isEmpty()) {
                     throw new ValidationException("Customer family is empty or null");
                 }
@@ -74,7 +74,7 @@ public class CustomerValidationContext extends ValidationContext<CustomerDto> {
 
         //  nationalCode validation
         addValidation(customer -> {
-            if (customer instanceof RealCustomerDto){
+            if (customer instanceof RealCustomerDto) {
                 String nationalCode = ((RealCustomerDto) customer).getNationalCode();
                 if (!RegexValidator.regexNationalCode(nationalCode) || nationalCode.trim().isEmpty()) {
                     throw new ValidationException("Invalid format national code ");
@@ -84,9 +84,9 @@ public class CustomerValidationContext extends ValidationContext<CustomerDto> {
 
         //  fax validation
         addValidation(customer -> {
-            if (customer instanceof LegalCustomerDto){
+            if (customer instanceof LegalCustomerDto) {
                 String fax = ((LegalCustomerDto) customer).getFaxNumber();
-                if (!RegexValidator.regexNumber(fax)|| fax.trim().trim().isEmpty()) {
+                if (!RegexValidator.regexNumber(fax) || fax.trim().trim().isEmpty()) {
                     throw new ValidationException("Invalid format fax number ");
                 }
             }
@@ -94,7 +94,7 @@ public class CustomerValidationContext extends ValidationContext<CustomerDto> {
 
         //  companyRegistration validation
         addValidation(customer -> {
-            if (customer instanceof LegalCustomerDto){
+            if (customer instanceof LegalCustomerDto) {
                 String registration = ((LegalCustomerDto) customer).getCompanyRegistration();
                 if (!RegexValidator.regexCompanyRegistration(registration)) {
                     throw new ValidationException("Invalid format company registration  ");

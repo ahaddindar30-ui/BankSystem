@@ -48,7 +48,7 @@ public class AccountFacadeTest {
     public void addAccountTest() throws CustomerNotFindException {
         AccountDto accountDto = new AccountDto();
         accountDto.setCustomerId(10);
-        accountDto.setBalance(new AmountDto(Currency.getInstance("USD"),BigDecimal.ZERO));
+        accountDto.setBalance(new AmountDto(Currency.getInstance("USD"), BigDecimal.ZERO));
         when(customerService.getCustomerById(10))
                 .thenThrow(new CustomerNotFindException());
         Exception exception = assertThrows(ValidationException.class, () -> {
@@ -63,12 +63,12 @@ public class AccountFacadeTest {
     public void addAccount() throws CustomerNotFindException, ValidationException {
         AccountDto accountDto = new AccountDto();
         accountDto.setCustomerId(10);
-        accountDto.setBalance(new AmountDto(Currency.getInstance("USD"),BigDecimal.ZERO));
+        accountDto.setBalance(new AmountDto(Currency.getInstance("USD"), BigDecimal.ZERO));
         when(customerService.getCustomerById(10))
                 .thenReturn(new RealCustomer());
 
 
-            accountFacade.addAccounts(accountDto);
+        accountFacade.addAccounts(accountDto);
 
 
         verify(accountService)

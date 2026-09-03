@@ -22,26 +22,25 @@ public class RealCustomer extends Customer implements Serializable {
     private String family;
     private String nationalCode;
 
-    @JsonFormat(shape =  JsonFormat.Shape.STRING,pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date birthday;
 
     public RealCustomer(String name, String number, String email) {
         super(name, number, email, CustomerType.REAL);
     }
-    public RealCustomer() {
-        super( CustomerType.REAL);
-    }
 
+    public RealCustomer() {
+        super(CustomerType.REAL);
+    }
 
 
     @Override
     public boolean equals(Object obj) {
         return obj instanceof RealCustomer &&
-                ((RealCustomer) obj).getEmail().equals(getEmail())&&
+                ((RealCustomer) obj).getEmail().equals(getEmail()) &&
                 ((RealCustomer) obj).getNationalCode()
                         .equals(getNationalCode());
     }
-
 
 
 }

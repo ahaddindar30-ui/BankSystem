@@ -13,17 +13,16 @@ import java.util.Date;
 public class RealCustomerDto extends CustomerDto {
     private String family;
     private String nationalCode;
-    @JsonFormat(shape =  JsonFormat.Shape.STRING,pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date birthday;
-    public RealCustomerDto(Integer id , String name, String number, String email, String password) {
-        super(id ,name, number, email,password, CustomerType.REAL);
+
+    public RealCustomerDto(Integer id, String name, String number, String email, String password) {
+        super(id, name, number, email, password, CustomerType.REAL);
     }
 
-    public RealCustomerDto(){
+    public RealCustomerDto() {
         super(CustomerType.REAL);
     }
-
-
 
 
 }

@@ -80,7 +80,7 @@ public class CustomerConsole extends BaseConsole {
     }
 
     private void exportFileJson() throws FileException {
-        String fileName = scannerWrapper.getUserInput("Enter file name: ",Function.identity());
+        String fileName = scannerWrapper.getUserInput("Enter file name: ", Function.identity());
         customerFacade.exportFileJson(fileName);
 
     }

@@ -30,13 +30,12 @@ public class LegalCustomer extends Customer implements Serializable {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof LegalCustomer &&
-                ((LegalCustomer) obj).getEmail().equals(getEmail())&&
+                ((LegalCustomer) obj).getEmail().equals(getEmail()) &&
                 ((LegalCustomer) obj).getCompanyRegistration()
                         .equals(getCompanyRegistration());
 
 
     }
-
 
 
 }

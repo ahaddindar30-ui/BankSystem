@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class PasswordEncoder {
-        public static String encoderPassword(String password ,Integer salt) {
+    public static String encoderPassword(String password, Integer salt) {
         String passToEncoder = password + salt;
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");

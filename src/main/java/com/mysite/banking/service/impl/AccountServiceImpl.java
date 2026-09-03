@@ -1,12 +1,10 @@
 package com.mysite.banking.service.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysite.banking.dao.AccountDao;
 import com.mysite.banking.dao.impl.AccountDaoImpl;
 import com.mysite.banking.model.Account;
 import com.mysite.banking.model.Amount;
-import com.mysite.banking.model.Customer;
 import com.mysite.banking.service.AccountService;
 import com.mysite.banking.service.exception.*;
 import com.mysite.banking.util.AmountUtil;

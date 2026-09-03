@@ -2,8 +2,8 @@ package com.mysite.banking.view;
 
 
 public class ConsoleUI extends BaseConsole implements AutoCloseable {
-  private final CustomerConsole customerConsole;
-  private final AccountConsole accountConsole;
+    private final CustomerConsole customerConsole;
+    private final AccountConsole accountConsole;
 
     public ConsoleUI() {
         super();
@@ -19,6 +19,7 @@ public class ConsoleUI extends BaseConsole implements AutoCloseable {
         System.out.println("2.Account Management");
         System.out.println();
     }
+
     public void startMenu() {
 
         int choice;
@@ -43,11 +44,6 @@ public class ConsoleUI extends BaseConsole implements AutoCloseable {
 
 
     }
-
-
-
-
-
 
 
     @Override

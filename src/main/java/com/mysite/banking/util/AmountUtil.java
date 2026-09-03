@@ -26,8 +26,7 @@ public class AmountUtil {
     }
 
 
-
-    public Amount add(Amount firstAmount , Amount secondAmount){
+    public Amount add(Amount firstAmount, Amount secondAmount) {
         BigDecimal convertedAmount = currencyConvertService.convertCurrency(
                 secondAmount.getValue(),
                 secondAmount.getCurrency(),
@@ -42,7 +41,7 @@ public class AmountUtil {
     }
 
 
-    public Amount subtract(Amount firstAmount , Amount secondAmount){
+    public Amount subtract(Amount firstAmount, Amount secondAmount) {
         BigDecimal convertedAmount = currencyConvertService.convertCurrency(
                 secondAmount.getValue(),
                 secondAmount.getCurrency(),
@@ -58,7 +57,7 @@ public class AmountUtil {
         );
     }
 
-    public int compareTo(Amount firstAmount , Amount secondAmount){
+    public int compareTo(Amount firstAmount, Amount secondAmount) {
         BigDecimal convertedAmount = currencyConvertService.convertCurrency(
                 secondAmount.getValue(),
                 secondAmount.getCurrency(),
