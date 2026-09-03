@@ -20,6 +20,10 @@ public class AccountServiceTest {
 
     private AccountService accountService;
 
+    static {
+        System.setProperty("DB_MEM", "true");
+    }
+
     @BeforeEach
     public void setup() {
         accountService = AccountServiceImpl.getInstance();

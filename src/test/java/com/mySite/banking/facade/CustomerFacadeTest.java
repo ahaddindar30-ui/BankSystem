@@ -26,6 +26,10 @@ class CustomerFacadeTest {
     @Mock
     private CustomerService customerService;
 
+    static {
+        System.setProperty("DB_MEM", "true");
+    }
+
     @BeforeEach
     void setUp() {
         facade = CustomerFacadeImpl.getInstance(customerService);

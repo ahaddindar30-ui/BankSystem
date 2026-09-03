@@ -20,21 +20,31 @@ import java.sql.SQLException;
 
 
 public class DatabaseManagerImpl implements DatabaseManager {
-    private static final DatabaseManagerImpl INSTANCE;
+    private static  DatabaseManagerImpl INSTANCE;
+
+    private final String JDBC_MEM_URL ="jdbc:h2:mem:testDB";
 
     public static DatabaseManagerImpl getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new DatabaseManagerImpl();
+        }
         return INSTANCE;
     }
 
-    static {
-        INSTANCE = new DatabaseManagerImpl();
-    }
+
 
     SessionFactory sessionFactory;
 
     private DatabaseManagerImpl() {
+        String url = System.getProperty("DB_MEM");
+        if (url == null || url.isEmpty()) {
+            url = "jdbc:h2:./data/BankSystemDB";
+        }else {
+            url = JDBC_MEM_URL;
+        }
         StandardServiceRegistry standardServiceRegistry = new StandardServiceRegistryBuilder()
                 .configure()
+                .applySetting("hibernate.connection.url", url)
                 .build();
 
 

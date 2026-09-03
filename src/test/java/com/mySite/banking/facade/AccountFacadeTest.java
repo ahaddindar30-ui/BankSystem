@@ -36,6 +36,9 @@ public class AccountFacadeTest {
 
     private AccountFacade accountFacade;
 
+    static {
+        System.setProperty("DB_MEM", "true");
+    }
 
     @BeforeEach
     public void setup() {
