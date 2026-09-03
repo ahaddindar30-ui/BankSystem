@@ -9,6 +9,8 @@ import com.mysite.banking.service.exception.ValidationException;
 import com.mysite.banking.service.validation.ValidationContext;
 import com.mysite.banking.util.RegexValidator;
 
+import java.util.Objects;
+
 public class CustomerValidationContext extends ValidationContext<CustomerDto> {
     protected final CustomerFacade customerFacade;
 
@@ -46,9 +48,11 @@ public class CustomerValidationContext extends ValidationContext<CustomerDto> {
                 throw new ValidationException("Email cannot be null or empty");
             }
             try {
-                customerFacade.printCustomersByEmail(email);
-                throw new ValidationException("Email must not be duplicated");
-
+                CustomerDto customersByEmail = customerFacade.printCustomersByEmail(email);
+                if (!Objects.equals(customer.getId(), customersByEmail.getId())) {
+                    throw new ValidationException("Email must not be duplicated");
+                }
+                
             } catch (CustomerNotFindException ignored) {
 
             }

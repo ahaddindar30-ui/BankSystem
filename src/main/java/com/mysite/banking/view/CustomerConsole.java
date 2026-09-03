@@ -28,7 +28,8 @@ public class CustomerConsole extends BaseConsole {
         System.out.println("5.Edit Customer By id");
         System.out.println("6.Delete Customers By id");
         System.out.println("7.Print all deleted customers");
-        System.out.println("8.Login");
+        System.out.println("8.Export JSON");
+        System.out.println("9.Login");
         System.out.println();
     }
 
@@ -63,15 +64,24 @@ public class CustomerConsole extends BaseConsole {
                         printAllDeletedCustomers();
                         break;
                     case 8:
+                        exportFileJson();
+                        break;
+                    case 9:
                         login();
                         break;
                     default:
                         System.out.println("Invalid Choice");
                 }
-            } catch (CustomerNotFindException | EmptyCustomerException ex) {
+            } catch (CustomerNotFindException | EmptyCustomerException | FileException ex) {
                 System.out.println(ex.getMessage());
             }
         } while (choice != 0);
+
+    }
+
+    private void exportFileJson() throws FileException {
+        String fileName = scannerWrapper.getUserInput("Enter file name: ",Function.identity());
+        customerFacade.exportFileJson(fileName);
 
     }
 

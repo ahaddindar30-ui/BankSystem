@@ -1,16 +1,19 @@
 package com.mysite.banking.dao;
 
+
+
 import com.mysite.banking.model.Customer;
 
 import java.util.List;
 
 public interface CustomerDao {
-    Integer save(Customer customer);
-    void update(Customer customer);
-    void delete(Customer customer);
-    Customer findById(Integer id);
-    List<Customer> getByStatus(boolean deleted);
-    List<Customer> getByName(String name);
-    List<Customer> getByFamily(String family);
-    Customer getByEmail(String email);
+    Integer saveCustomer(Customer customer);
+    void updateCustomer(Customer customer);
+    void deleteCustomer(Customer customer);
+    Customer findCustomerById(Integer id);
+    List<Customer> getCustomerByStatus(Boolean deleted);
+    List<Customer> getAllCustomers(Boolean deleted);
+    List<Customer> getCustomerByName(String name);
+    List<Customer> getCustomerByFamily(String family);
+    Customer getCustomerByEmail(String email);
 }

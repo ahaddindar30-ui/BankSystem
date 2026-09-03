@@ -2,7 +2,6 @@ package com.mysite.banking.service;
 
 import com.mysite.banking.model.Account;
 import com.mysite.banking.model.Amount;
-import com.mysite.banking.model.FileType;
 import com.mysite.banking.service.exception.*;
 
 import java.util.List;
@@ -18,16 +17,6 @@ public interface AccountService {
 
     Account getAccountById(Integer id) throws AccountNotFindException;
 
-    void saveData(String name, FileType fileType) throws FileException;
-
-    void loadData(String name, FileType fileType) throws FileException;
-
-    void initData();
-
-    void saveOnExit();
-
-    void addData(String name) throws FileException;
-
     List<Account> getAccountByCustomerId(Integer id);
 
     void deposit(int accountId, Amount amount)throws AccountNotFindException;
@@ -35,4 +24,6 @@ public interface AccountService {
     void withdraw(int accountId, Amount amount)throws AccountNotFindException, ValidationException;
 
     void transfer(int fromAccountId, int toAccountId, Amount amount)throws AccountNotFindException, ValidationException ;
+
+    void exportFileJson(String fileName) throws FileException;
 }

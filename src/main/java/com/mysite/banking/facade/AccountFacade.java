@@ -21,16 +21,6 @@ public interface AccountFacade {
 
     AccountDto getAccountById(Integer id) throws AccountNotFindException;
 
-    void saveData(String name, FileType fileType) throws FileException;
-
-    void loadData(String name, FileType fileType) throws FileException;
-
-    void initData();
-
-    void saveOnExit();
-
-    void addData(String name) throws FileException;
-
     List<AccountDto> printAccountByCustomerName(String name);
 
     void deposit(int accountId, AmountDto amount)throws AccountNotFindException;
@@ -38,4 +28,6 @@ public interface AccountFacade {
     void withdraw(int accountId, AmountDto amount)throws AccountNotFindException,ValidationException ;
 
     void transfer(int fromAccountId, int toAccountId, AmountDto amount)throws AccountNotFindException, ValidationException ;
+
+    void exportFileJson(String fileName) throws FileException;
 }

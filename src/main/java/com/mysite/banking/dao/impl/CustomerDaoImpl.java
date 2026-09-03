@@ -4,6 +4,7 @@ import com.mysite.banking.dao.CustomerDao;
 import com.mysite.banking.model.Customer;
 import com.mysite.banking.model.RealCustomer;
 import com.mysite.banking.service.DatabaseManager;
+import com.mysite.banking.service.exception.UpdateException;
 import com.mysite.banking.service.impl.DatabaseManagerImpl;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -35,7 +36,7 @@ public class CustomerDaoImpl implements CustomerDao {
     }
 
     @Override
-    public Integer save(Customer customer) {
+    public Integer saveCustomer(Customer customer) {
         try (Session session = databaseManager.getSession()) {
             session.beginTransaction();
             session.persist(customer);
@@ -46,41 +47,50 @@ public class CustomerDaoImpl implements CustomerDao {
     }
 
     @Override
-    public void update(Customer customer) {
+    public void updateCustomer(Customer customer) {
         try (Session session = databaseManager.getSession()) {
             session.beginTransaction();
             session.merge(customer);
             session.getTransaction().commit();
+        } catch (Exception ex) {
+            throw new UpdateException("update exception, please retry", ex);
         }
     }
 
     @Override
-    public void delete(Customer customer) {
+    public void deleteCustomer(Customer customer) {
         customer.setDeleted(true);
-        update(customer);
+        updateCustomer(customer);
     }
 
     @Override
-    public Customer findById(Integer id) {
+    public Customer findCustomerById(Integer id) {
         try (Session session = databaseManager.getSession()) {
             return session.find(Customer.class, id);
         }
     }
 
     @Override
-    public List<Customer> getByStatus(boolean deleted) {
+    public List<Customer> getCustomerByStatus(Boolean deleted) {
         try (Session session = databaseManager.getSession()) {
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             CriteriaQuery<Customer> criteriaQuery = criteriaBuilder.createQuery(Customer.class);
             Root<Customer> customerRoot = criteriaQuery.from(Customer.class);
-            criteriaQuery.select(customerRoot).where(criteriaBuilder.equal(customerRoot.get("deleted"), deleted));
+            criteriaQuery.select(customerRoot);
+            if (deleted != null)
+                criteriaQuery.where(criteriaBuilder.equal(customerRoot.get("deleted"), deleted));
             return session.createQuery(criteriaQuery).getResultList();
         }
 
     }
 
     @Override
-    public List<Customer> getByName(String name) {
+    public List<Customer> getAllCustomers(Boolean deleted) {
+        return getCustomerByStatus(null);
+    }
+
+    @Override
+    public List<Customer> getCustomerByName(String name) {
         try (Session session = databaseManager.getSession()) {
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             CriteriaQuery<Customer> criteriaQuery = criteriaBuilder.createQuery(Customer.class);
@@ -97,7 +107,7 @@ public class CustomerDaoImpl implements CustomerDao {
     }
 
     @Override
-    public List<Customer> getByFamily(String family) {
+    public List<Customer> getCustomerByFamily(String family) {
         try (Session session = databaseManager.getSession()) {
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             CriteriaQuery<Customer> criteriaQuery = criteriaBuilder.createQuery(Customer.class);
@@ -114,7 +124,7 @@ public class CustomerDaoImpl implements CustomerDao {
     }
 
     @Override
-    public Customer getByEmail(String email) {
+    public Customer getCustomerByEmail(String email) {
         try (Session session = databaseManager.getSession()) {
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             CriteriaQuery<Customer> criteriaQuery = criteriaBuilder.createQuery(Customer.class);

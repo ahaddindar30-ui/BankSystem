@@ -1,27 +1,31 @@
 package com.mysite.banking.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.util.concurrent.atomic.AtomicInteger;
+@Entity
+@Table(name = "account")
 @Getter
 @Setter
 @ToString
 public class Account implements Serializable {
-    private static final AtomicInteger ID_COUNTER = new AtomicInteger(1);
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "account_sequence")
+    @SequenceGenerator(name = "account_sequence",sequenceName = "hibernate_account_seq",allocationSize=1)
     private Integer id;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "customer_id")
     private Amount balance;
     private Integer customerId;
     private boolean deleted;
     public Account() {
-        this.id = ID_COUNTER.getAndIncrement();
         this.deleted=false;
     }
 
     public Account(Amount balance, Integer customerId) {
-        this.id = ID_COUNTER.getAndIncrement();
         this.balance = balance;
         this.customerId = customerId;
         this.deleted = false;

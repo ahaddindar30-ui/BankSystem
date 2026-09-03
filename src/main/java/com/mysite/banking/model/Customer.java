@@ -32,10 +32,12 @@ public abstract class Customer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_sequence")
-    @SequenceGenerator(name = "customer_sequence", sequenceName = "hibernate_sequence", allocationSize = 1)
+    @SequenceGenerator(name = "customer_sequence", sequenceName = "hibernate_customer_seq", allocationSize = 1)
     private Integer id;
     private boolean deleted;
     private String password;
+    @Version
+    private long version;
 
     protected Customer() {
 

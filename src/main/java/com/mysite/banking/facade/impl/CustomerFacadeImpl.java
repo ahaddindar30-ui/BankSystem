@@ -104,4 +104,9 @@ public class CustomerFacadeImpl implements CustomerFacade {
     public CustomerDto printCustomersByEmail(String email) throws CustomerNotFindException {
         return customerMapStruct.mapToCustomerDto(customerService.printCustomersByEmail(email));
     }
+
+    @Override
+    public void exportFileJson(String fileName) throws FileException {
+        customerService.exportFileJson(fileName);
+    }
 }

@@ -32,9 +32,7 @@ public class AccountConsole extends BaseConsole {
         System.out.println("7.Deposit");
         System.out.println("8.Withdraw");
         System.out.println("9.Transfer");
-        System.out.println("10.Save data");
-        System.out.println("11.Load data");
-        System.out.println("12.Add data");
+        System.out.println("10.Export Json");
         System.out.println();
     }
 
@@ -75,21 +73,20 @@ public class AccountConsole extends BaseConsole {
                         transfer();
                         break;
                     case 10:
-                        saveAccountData();
-                        break;
-                    case 11:
-                        loadAccountData();
-                        break;
-                    case 12:
-                        addAccountData();
+                        exportFileJson();
                         break;
                     default:
                         System.out.println("Invalid Choice");
                 }
-            } catch (AccountNotFindException | FileException | EmptyAccountException | ValidationException ex) {
+            } catch (AccountNotFindException | EmptyAccountException | ValidationException | FileException ex) {
                 System.out.println(ex.getMessage());
             }
         } while (choice != 0);
+    }
+
+    private void exportFileJson() throws FileException {
+        String fileName = scannerWrapper.getUserInput("Enter file name: ",Function.identity());
+        accountFacade.exportFileJson(fileName);
     }
 
     private void transfer() throws AccountNotFindException, ValidationException {
@@ -114,44 +111,6 @@ public class AccountConsole extends BaseConsole {
         BigDecimal amount = scannerWrapper.getUserInput("Enter the amount ", BigDecimal::new);
         Currency currency = getCurrency();
         accountFacade.deposit(accountId, new AmountDto(currency, amount));
-    }
-
-    private void addAccountData() throws FileException {
-        String name = scannerWrapper.getUserInput("Enter your json file name: ", Function.identity());
-        accountFacade.addData(name);
-
-    }
-
-    private void loadAccountData() throws FileException {
-        System.out.println("File type:");
-        System.out.println("1.Serialaze");
-        System.out.println("2.Jaon");
-        System.out.println();
-        int choice = scannerWrapper.getUserInput("Enter your choice: ", Integer::valueOf);
-        try {
-            FileType fileType = FileType.fromValue(choice);
-            String name = scannerWrapper.getUserInput("Enter your file name: ", Function.identity());
-            accountFacade.loadData(name, fileType);
-        } catch (InvalidType ex) {
-            System.out.println("Invalid Type exception.");
-            loadAccountData();
-        }
-    }
-
-    private void saveAccountData() throws FileException {
-        System.out.println("File type:");
-        System.out.println("1.Serialaze");
-        System.out.println("2.Jaon");
-        System.out.println();
-        int choice = scannerWrapper.getUserInput("Enter your choice: ", Integer::valueOf);
-        try {
-            FileType fileType = FileType.fromValue(choice);
-            String name = scannerWrapper.getUserInput("Enter your file name: ", Function.identity());
-            accountFacade.saveData(name, fileType);
-        } catch (InvalidType ex) {
-            System.out.println("Invalid Type exception.");
-            saveAccountData();
-        }
     }
 
 
@@ -236,14 +195,6 @@ public class AccountConsole extends BaseConsole {
         accountFacade.deleteAccountById(Integer.valueOf(id));
     }
 
-    public void saveOnExit() {
-        accountFacade.saveOnExit();
-    }
-
-    public void initData() {
-        accountFacade.initData();
-    }
-
 
     private Currency getCurrency() {
         while (true) {
@@ -252,7 +203,7 @@ public class AccountConsole extends BaseConsole {
             System.out.println("2. USD");
             System.out.println("3. GBP");
             System.out.println();
-            int choice = scannerWrapper.getUserInput("Enter your choice: ",Integer::valueOf);
+            int choice = scannerWrapper.getUserInput("Enter your choice: ", Integer::valueOf);
 
             if (choice == 1) {
                 return Currency.getInstance("EUR");

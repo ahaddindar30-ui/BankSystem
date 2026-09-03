@@ -6,7 +6,6 @@ import com.mysite.banking.facade.AccountFacade;
 import com.mysite.banking.mapper.AccountMapStruct;
 import com.mysite.banking.model.Account;
 import com.mysite.banking.model.Customer;
-import com.mysite.banking.model.FileType;
 import com.mysite.banking.service.AccountService;
 import com.mysite.banking.service.CustomerService;
 import com.mysite.banking.service.exception.*;
@@ -88,29 +87,6 @@ public class AccountFacadeImpl implements AccountFacade {
         return accountMapStruct.mapToAccountDto(accountService.getAccountById(id));
     }
 
-    public void saveData(String name, FileType fileType) throws FileException {
-        accountService.saveData(name, fileType);
-    }
-
-    @Override
-    public void loadData(String name, FileType fileType) throws FileException {
-        accountService.loadData(name, fileType);
-    }
-
-    @Override
-    public void initData() {
-        accountService.initData();
-    }
-
-    @Override
-    public void saveOnExit() {
-        accountService.saveOnExit();
-    }
-
-    @Override
-    public void addData(String name) throws FileException {
-        accountService.addData(name);
-    }
 
     @Override
     public List<AccountDto> printAccountByCustomerName(String name) {
@@ -135,5 +111,10 @@ public class AccountFacadeImpl implements AccountFacade {
     @Override
     public void transfer(int fromAccountId, int toAccountId, AmountDto amountDto) throws AccountNotFindException, ValidationException {
         accountService.transfer(fromAccountId, toAccountId, accountMapStruct.mapToAmount(amountDto));
+    }
+
+    @Override
+    public void exportFileJson(String fileName) throws FileException {
+        accountService.exportFileJson(fileName);
     }
 }

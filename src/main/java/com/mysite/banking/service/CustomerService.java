@@ -25,4 +25,6 @@ public interface CustomerService {
 
     Customer printCustomersByEmail(String email) throws CustomerNotFindException;
 
+    void exportFileJson(String fileName) throws FileException;
+
 }

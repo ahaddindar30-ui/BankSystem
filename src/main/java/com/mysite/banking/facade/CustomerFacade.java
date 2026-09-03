@@ -26,4 +26,6 @@ public interface CustomerFacade {
     Boolean login(String userName, String password);
 
     CustomerDto printCustomersByEmail(String email)throws  CustomerNotFindException;
+
+    void exportFileJson(String fileName) throws FileException;
 }

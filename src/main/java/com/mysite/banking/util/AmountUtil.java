@@ -33,8 +33,12 @@ public class AmountUtil {
                 secondAmount.getCurrency(),
                 firstAmount.getCurrency()
         );
-        return new Amount(firstAmount.getCurrency(),
-                firstAmount.getValue().add(convertedAmount));
+        return new Amount(
+                firstAmount.getId(),
+                firstAmount.getCurrency(),
+                firstAmount.getValue().add(convertedAmount),
+                firstAmount.getVersion()
+        );
     }
 
 
@@ -44,8 +48,14 @@ public class AmountUtil {
                 secondAmount.getCurrency(),
                 firstAmount.getCurrency()
         );
-        return new Amount(firstAmount.getCurrency(),
-                firstAmount.getValue().subtract(convertedAmount));
+        return new Amount(
+                firstAmount.getId(),
+                firstAmount.getCurrency(),
+                firstAmount.getValue().subtract(convertedAmount),
+                firstAmount.getVersion()
+
+
+        );
     }
 
     public int compareTo(Amount firstAmount , Amount secondAmount){

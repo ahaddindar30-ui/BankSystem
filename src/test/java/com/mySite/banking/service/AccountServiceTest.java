@@ -4,6 +4,7 @@ import com.mysite.banking.model.Account;
 import com.mysite.banking.model.Amount;
 import com.mysite.banking.service.AccountService;
 import com.mysite.banking.service.exception.AccountNotFindException;
+import com.mysite.banking.service.exception.UpdateException;
 import com.mysite.banking.service.exception.ValidationException;
 import com.mysite.banking.service.impl.AccountServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ public class AccountServiceTest {
     private AccountService accountService;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         accountService = AccountServiceImpl.getInstance();
     }
 
@@ -28,10 +29,10 @@ public class AccountServiceTest {
     @Test
     public void depositCaseA() throws AccountNotFindException {
         Account account = new Account();
-        account.setBalance(new Amount(Currency.getInstance("USD"),BigDecimal.ZERO));
+        account.setBalance(new Amount(Currency.getInstance("USD"), BigDecimal.ZERO));
         accountService.addAccounts(account);
         Integer id = account.getId();
-        accountService.deposit(id,new Amount(Currency.getInstance("USD"),BigDecimal.valueOf(10.0)));
+        accountService.deposit(id, new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(10.0)));
         Account accountById = accountService.getAccountById(id);
 
         assertEquals(BigDecimal.valueOf(10.0).setScale(2), accountById.getBalance().getValue());
@@ -42,10 +43,10 @@ public class AccountServiceTest {
     @Test
     public void depositCaseB() throws AccountNotFindException {
         Account account = new Account();
-        account.setBalance(new Amount(Currency.getInstance("USD"),BigDecimal.valueOf(20.0)));
+        account.setBalance(new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(20.0)));
         accountService.addAccounts(account);
         Integer id = account.getId();
-        accountService.deposit(id,new Amount(Currency.getInstance("USD"),BigDecimal.valueOf(10.0)));
+        accountService.deposit(id, new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(10.0)));
         Account accountById = accountService.getAccountById(id);
 
         assertEquals(BigDecimal.valueOf(30.0).setScale(2), accountById.getBalance().getValue());
@@ -57,10 +58,10 @@ public class AccountServiceTest {
     @Test
     public void depositCaseC() throws AccountNotFindException {
         Account account = new Account();
-        account.setBalance(new Amount(Currency.getInstance("USD"),BigDecimal.valueOf(20.2)));
+        account.setBalance(new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(20.2)));
         accountService.addAccounts(account);
         Integer id = account.getId();
-        accountService.deposit(id,new Amount(Currency.getInstance("USD"),BigDecimal.valueOf(10.1)));
+        accountService.deposit(id, new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(10.1)));
         Account accountById = accountService.getAccountById(id);
 
         assertEquals(BigDecimal.valueOf(30.3).setScale(2), accountById.getBalance().getValue());
@@ -71,10 +72,10 @@ public class AccountServiceTest {
     @Test
     public void depositCaseD() throws AccountNotFindException {
         Account account = new Account();
-        account.setBalance(new Amount(Currency.getInstance("USD"),BigDecimal.valueOf(50.1)));
+        account.setBalance(new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(50.1)));
         accountService.addAccounts(account);
         Integer id = account.getId();
-        accountService.deposit(id,new Amount(Currency.getInstance("USD"),BigDecimal.valueOf(30.2)));
+        accountService.deposit(id, new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(30.2)));
         Account accountById = accountService.getAccountById(id);
 
         assertEquals(BigDecimal.valueOf(80.3).setScale(2), accountById.getBalance().getValue());
@@ -85,25 +86,26 @@ public class AccountServiceTest {
     @Test
     public void depositCaseE() throws AccountNotFindException {
         Account account = new Account();
-        account.setBalance(new Amount(Currency.getInstance("USD"),BigDecimal.valueOf(2.1)));
+        account.setBalance(new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(2.1)));
         accountService.addAccounts(account);
         Integer id = account.getId();
-        accountService.deposit(id,new Amount(Currency.getInstance("USD"),BigDecimal.valueOf(3.2)));
+        accountService.deposit(id, new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(3.2)));
         Account accountById = accountService.getAccountById(id);
 
         assertEquals(BigDecimal.valueOf(5.3).setScale(2), accountById.getBalance().getValue());
 
 
     }
+
     @Test
     public void depositCaseF() throws AccountNotFindException {
         Account account = new Account();
-        account.setBalance(new Amount(Currency.getInstance("USD"),BigDecimal.ZERO));
+        account.setBalance(new Amount(Currency.getInstance("USD"), BigDecimal.ZERO));
 
         accountService.addAccounts(account);
         Integer id = account.getId();
         for (int i = 0; i < 10; i++) {
-            accountService.deposit(id,new Amount(Currency.getInstance("USD"),BigDecimal.valueOf(10.0)));
+            accountService.deposit(id, new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(10.0)));
         }
         Account accountById = accountService.getAccountById(id);
 
@@ -116,13 +118,13 @@ public class AccountServiceTest {
     @Test
     public void depositCaseG() throws AccountNotFindException {
         Account account = new Account();
-        account.setBalance(new Amount(Currency.getInstance("USD"),BigDecimal.ZERO));
+        account.setBalance(new Amount(Currency.getInstance("USD"), BigDecimal.ZERO));
         accountService.addAccounts(account);
         Integer id = account.getId();
         Runnable runnable = () -> {
             for (int i = 0; i < 10; i++) {
                 try {
-                    accountService.deposit(id,new Amount(Currency.getInstance("USD"),BigDecimal.valueOf(100.0)));
+                    accountService.deposit(id, new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(100.0)));
                 } catch (AccountNotFindException ignored) {
 
                 }
@@ -139,17 +141,18 @@ public class AccountServiceTest {
 
 
     }
+
     @Test
     public void depositCaseH() throws AccountNotFindException, InterruptedException {
         Account account = new Account();
-        account.setBalance(new Amount(Currency.getInstance("USD"),BigDecimal.ZERO));
+        account.setBalance(new Amount(Currency.getInstance("USD"), BigDecimal.ZERO));
 
         accountService.addAccounts(account);
         Integer id = account.getId();
         Runnable depositTask = () -> {
             for (int i = 0; i < 100; i++) {
                 try {
-                    accountService.deposit(id,new Amount(Currency.getInstance("USD"),BigDecimal.valueOf(10.0)));
+                    accountService.deposit(id, new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(10.0)));
                 } catch (AccountNotFindException ignored) {
 
                 }
@@ -163,7 +166,7 @@ public class AccountServiceTest {
             threads[i].start();
         }
         for (Thread thread : threads) {
-                thread.join();
+            thread.join();
 
         }
 
@@ -179,13 +182,15 @@ public class AccountServiceTest {
     @Test
     public void depositCaseI() throws AccountNotFindException, InterruptedException {
         Account account = new Account();
-        account.setBalance(new Amount(Currency.getInstance("USD"),BigDecimal.ZERO));
+        account.setBalance(new Amount(Currency.getInstance("USD"), BigDecimal.ZERO));
         accountService.addAccounts(account);
         Integer id = account.getId();
         Runnable depositTask = () -> {
             for (int i = 0; i < 100; i++) {
                 try {
-                    accountService.deposit(id,new Amount(Currency.getInstance("USD"),BigDecimal.valueOf(10.0)));
+                    accountService.deposit(id, new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(10.0)));
+                } catch (UpdateException e) {
+                    i = i - 1;
                 } catch (AccountNotFindException ignored) {
 
                 }
@@ -214,11 +219,11 @@ public class AccountServiceTest {
     @Test
     public void withdrawCaseA() throws AccountNotFindException, ValidationException {
         Account account = new Account();
-        account.setBalance(new Amount(Currency.getInstance("USD"),BigDecimal.valueOf( 20.3)));
+        account.setBalance(new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(20.3)));
 
         accountService.addAccounts(account);
         Integer id = account.getId();
-        accountService.withdraw(id,new Amount(Currency.getInstance("USD"),BigDecimal.valueOf( 10.2)));
+        accountService.withdraw(id, new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(10.2)));
         Account accountById = accountService.getAccountById(id);
 
         assertEquals(BigDecimal.valueOf(10.1).setScale(2), accountById.getBalance().getValue());
@@ -229,14 +234,16 @@ public class AccountServiceTest {
     @Test
     public void withdrawCaseB() throws AccountNotFindException, InterruptedException {
         Account account = new Account();
-        account.setBalance(new Amount(Currency.getInstance("USD"),BigDecimal.valueOf( 30000)));
+        account.setBalance(new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(30000)));
 
         accountService.addAccounts(account);
         Integer id = account.getId();
         Runnable withdrawTask = () -> {
             for (int i = 0; i < 100; i++) {
                 try {
-                    accountService.withdraw(id,new Amount(Currency.getInstance("USD"),BigDecimal.valueOf(10.0)));
+                    accountService.withdraw(id, new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(10.0)));
+                } catch (UpdateException e) {
+                    i = i - 1;
                 } catch (AccountNotFindException | ValidationException ignored) {
 
                 }
@@ -265,18 +272,18 @@ public class AccountServiceTest {
     @Test
     public void transferCaseA() throws AccountNotFindException, ValidationException {
         Account accountA = new Account();
-        accountA.setBalance(new Amount(Currency.getInstance("USD"),BigDecimal.valueOf(10.1)));
+        accountA.setBalance(new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(10.1)));
         accountService.addAccounts(accountA);
         Integer idA = accountA.getId();
 
         Account accountB = new Account();
-        accountB.setBalance(new Amount(Currency.getInstance("USD"),BigDecimal.valueOf(20.2)));
+        accountB.setBalance(new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(20.2)));
 
         accountService.addAccounts(accountB);
         Integer idB = accountB.getId();
 
 
-        accountService.transfer(idA,idB, new Amount(Currency.getInstance("USD"),BigDecimal.valueOf(10.1)));
+        accountService.transfer(idA, idB, new Amount(Currency.getInstance("USD"), BigDecimal.valueOf(10.1)));
 
 
         Account accountById = accountService.getAccountById(idB);

@@ -3,7 +3,6 @@ package com.mySite.banking.facade;
 import com.mysite.banking.dto.RealCustomerDto;
 import com.mysite.banking.facade.impl.CustomerFacadeImpl;
 import com.mysite.banking.model.Customer;
-import com.mysite.banking.model.FileType;
 import com.mysite.banking.model.RealCustomer;
 import com.mysite.banking.service.CustomerService;
 import com.mysite.banking.service.exception.CustomerNotFindException;
@@ -111,7 +110,9 @@ class CustomerFacadeTest {
     void addCustomers_shouldThrowValidationException_whenEmailIsInvalid() throws DuplicateCustomerException {
 
         RealCustomerDto dto = createValidDto();
+
         dto.setEmail("invalid-email");
+        dto.setEmail("");
 
         assertThrows(
                 ValidationException.class,
