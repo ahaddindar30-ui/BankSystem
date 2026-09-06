@@ -109,16 +109,18 @@ public class CustomerServiceImpl implements CustomerService {
 
 
     @Override
-    public Boolean login(String userName, String password) {
+    public Customer login(String userName, String password) {
         try {
             Customer customer = printCustomersByEmail(userName);
-            return Objects.equals(
-                    customer.getPassword(),
+            boolean validPassword = Objects.equals(customer.getPassword(),
                     PasswordEncoder.encoderPassword(password, customer.getId()));
+            if (validPassword) {
+                return customer;
+            }
+            return null;
         } catch (CustomerNotFindException e) {
-            return false;
+            return null;
         }
-
     }
 
     @Override

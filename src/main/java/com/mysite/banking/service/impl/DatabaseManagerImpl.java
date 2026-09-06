@@ -1,10 +1,7 @@
 package com.mysite.banking.service.impl;
 
 
-import com.mysite.banking.model.Account;
-import com.mysite.banking.model.Amount;
-import com.mysite.banking.model.LegalCustomer;
-import com.mysite.banking.model.RealCustomer;
+import com.mysite.banking.model.*;
 import com.mysite.banking.service.DatabaseManager;
 
 import org.h2.tools.Server;
@@ -64,6 +61,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
         sources.addAnnotatedClass(LegalCustomer.class);
         sources.addAnnotatedClass(Account.class);
         sources.addAnnotatedClass(Amount.class);
+        sources.addAnnotatedClass(ATMStock.class);
 
 
         Metadata metadata = sources.getMetadataBuilder().build();

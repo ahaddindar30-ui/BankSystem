@@ -23,8 +23,7 @@ public interface CustomerFacade {
 
     CustomerDto getCustomerById(Integer id) throws CustomerNotFindException;
 
-    Boolean login(String userName, String password);
-
+    CustomerDto login(String userName, String password);
     CustomerDto printCustomersByEmail(String email) throws CustomerNotFindException;
 
     void exportFileJson(String fileName) throws FileException;

@@ -23,6 +23,8 @@ public interface AccountFacade {
 
     List<AccountDto> printAccountByCustomerName(String name);
 
+    List<AccountDto> printAccountById(Integer id);
+
     void deposit(int accountId, AmountDto amount) throws AccountNotFindException;
 
     void withdraw(int accountId, AmountDto amount) throws AccountNotFindException, ValidationException;

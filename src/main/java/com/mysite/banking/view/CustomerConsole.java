@@ -19,7 +19,8 @@ public class CustomerConsole extends BaseConsole {
     }
 
     public void printCustomerMenu() {
-        System.out.println("Menu:");
+        System.out.println();
+        System.out.println("===== CUSTOMER MENU =====");
         System.out.println("0.Back");
         System.out.println("1.Add Customer");
         System.out.println("2.Print All Customers");
@@ -29,7 +30,6 @@ public class CustomerConsole extends BaseConsole {
         System.out.println("6.Delete Customers By id");
         System.out.println("7.Print all deleted customers");
         System.out.println("8.Export JSON");
-        System.out.println("9.Login");
         System.out.println();
     }
 
@@ -66,9 +66,6 @@ public class CustomerConsole extends BaseConsole {
                     case 8:
                         exportFileJson();
                         break;
-                    case 9:
-                        login();
-                        break;
                     default:
                         System.out.println("Invalid Choice");
                 }
@@ -85,18 +82,6 @@ public class CustomerConsole extends BaseConsole {
 
     }
 
-
-    private void login() {
-        String userName = scannerWrapper.getUserInput("Enter your email: ", Function.identity());
-        String password = scannerWrapper.getUserInput("Enter your password: ", Function.identity());
-        Boolean validate = customerFacade.login(userName, password);
-        if (validate) {
-            System.out.println("Welcome to the system.");
-        } else {
-            System.out.println("username or password is wrong!");
-        }
-
-    }
 
     private void deletedCustomerById() throws CustomerNotFindException {
         String id = scannerWrapper.getUserInput("Enter customer id: ", Function.identity());

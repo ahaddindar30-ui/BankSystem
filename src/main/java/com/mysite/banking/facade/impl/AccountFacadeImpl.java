@@ -100,6 +100,11 @@ public class AccountFacadeImpl implements AccountFacade {
     }
 
     @Override
+    public List<AccountDto> printAccountById(Integer id) {
+        return accountMapStruct.mapAccountDtoList(accountService.getAccountByCustomerId(id));
+    }
+
+    @Override
     public void deposit(int accountId, AmountDto amount) throws AccountNotFindException {
         accountService.deposit(accountId, accountMapStruct.mapToAmount(amount));
     }

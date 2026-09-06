@@ -4,19 +4,23 @@ package com.mysite.banking.view;
 public class ConsoleUI extends BaseConsole implements AutoCloseable {
     private final CustomerConsole customerConsole;
     private final AccountConsole accountConsole;
+    private final AtmConsole atmConsole;
 
     public ConsoleUI() {
         super();
         this.customerConsole = new CustomerConsole();
         this.accountConsole = new AccountConsole();
+        atmConsole = new AtmConsole();
     }
 
 
     public void printMainMenu() {
-        System.out.println("Menu:");
+        System.out.println();
+        System.out.println("===== MAIN MENU =====");
         System.out.println("0.Exit");
         System.out.println("1.Customer Management");
         System.out.println("2.Account Management");
+        System.out.println("3.ATM");
         System.out.println();
     }
 
@@ -35,6 +39,9 @@ public class ConsoleUI extends BaseConsole implements AutoCloseable {
                     break;
                 case 2:
                     accountConsole.menu();
+                    break;
+                case 3:
+                    atmConsole.menu();
                     break;
                 default:
                     System.out.println("Invalid Choice");

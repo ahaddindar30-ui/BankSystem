@@ -1,5 +1,6 @@
 package com.mySite.banking.facade;
 
+import com.mysite.banking.dto.CustomerDto;
 import com.mysite.banking.dto.RealCustomerDto;
 import com.mysite.banking.facade.impl.CustomerFacadeImpl;
 import com.mysite.banking.model.Customer;
@@ -255,47 +256,52 @@ class CustomerFacadeTest {
 
 
     @Test
-    void login_shouldReturnTrue_whenCredentialsAreCorrect() {
+    void login_shouldReturnCustomer_whenCredentialsAreCorrect() {
+
+        Customer customer = new RealCustomer();
+        customer.setId(1);
+        customer.setName("Ahad");
+        customer.setEmail("ahad@example.com");
 
         when(customerService.login(
                 "ahad@example.com",
                 "123456"
-        )).thenReturn(true);
+        )).thenReturn(customer);
 
-        Boolean result = facade.login(
+        CustomerDto result = facade.login(
                 "ahad@example.com",
                 "123456"
         );
 
-        assertTrue(result);
+        assertNotNull(result);
+        assertEquals(1, result.getId());
+        assertEquals("Ahad", result.getName());
+        assertEquals("ahad@example.com", result.getEmail());
 
-        verify(customerService)
-                .login(
-                        "ahad@example.com",
-                        "123456"
-                );
+        verify(customerService).login(
+                "ahad@example.com",
+                "123456"
+        );
     }
-
     @Test
-    void login_shouldReturnFalse_whenCredentialsAreWrong() {
+    void login_shouldReturnNull_whenCredentialsAreWrong() {
 
         when(customerService.login(
                 "ahad@example.com",
                 "wrong"
-        )).thenReturn(false);
+        )).thenReturn(null);
 
-        Boolean result = facade.login(
+        CustomerDto result = facade.login(
                 "ahad@example.com",
                 "wrong"
         );
 
-        assertFalse(result);
+        assertNull(result);
 
-        verify(customerService)
-                .login(
-                        "ahad@example.com",
-                        "wrong"
-                );
+        verify(customerService).login(
+                "ahad@example.com",
+                "wrong"
+        );
     }
 
     @Test

@@ -96,8 +96,12 @@ public class CustomerFacadeImpl implements CustomerFacade {
     }
 
     @Override
-    public Boolean login(String userName, String password) {
-        return customerService.login(userName, password);
+    public CustomerDto login(String userName, String password) {
+        Customer customer = customerService.login(userName, password);
+        if (customer == null) {
+            return null;
+        }
+        return customerMapStruct.mapToCustomerDto(customer);
     }
 
     @Override

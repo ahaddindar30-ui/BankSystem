@@ -20,7 +20,8 @@ public class AccountConsole extends BaseConsole {
     }
 
     public void printAccountMenu() {
-        System.out.println("Menu:");
+        System.out.println();
+        System.out.println("===== ACCOUNT MENU =====");
         System.out.println("0.Back");
         System.out.println("1.Add account");
         System.out.println("2.Print all accounts");
@@ -165,7 +166,7 @@ public class AccountConsole extends BaseConsole {
 
     public void printAllAccounts() throws EmptyAccountException, AccountNotFindException {
         List<AccountDto> allAccount = accountFacade.getActiveAccounts();
-        System.out.println("All Customers: ");
+        System.out.println("All Accounts: ");
         for (AccountDto account : allAccount) {
             try {
                 System.out.println(objectMapper.writeValueAsString(account));

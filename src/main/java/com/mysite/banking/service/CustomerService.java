@@ -22,8 +22,7 @@ public interface CustomerService {
 
     Customer getCustomerById(Integer id) throws CustomerNotFindException;
 
-    Boolean login(String userName, String password);
-
+    Customer login(String userName, String password);
     Customer printCustomersByEmail(String email) throws CustomerNotFindException;
 
     void exportFileJson(String fileName) throws FileException;
